@@ -30,7 +30,6 @@ int main(int argc, char **argv)
 
     gameObject player;
     gameObject bullet[51];
-    //int player.direction = 0; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
     int shoot = 0;
     int bullet_i = 0;
     int bullet_i2 = 0;
@@ -38,13 +37,6 @@ int main(int argc, char **argv)
     int colEnemy = 0;
     int colDetected[5] = {0, 0, 0, 0, 0}; // 0 = left, 1 = down, 2 = right, 3 = up
     gameObject enemy[ENEMY_COUNT];
-
-    player.fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
-    player.fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
-    player.rect.w = player.fp.w;
-    player.rect.h = player.fp.h;
-    player.rect.x = RESOLUTION_X / 2 - player.rect.w / 2;
-    player.rect.y = RESOLUTION_Y / 2 - player.rect.h / 2;
 
     init(&player, &enemy, &bullet);
 
@@ -92,13 +84,6 @@ int main(int argc, char **argv)
             colDetected[RIGHT_COL] = 0;
             colDetected[UP_COL] = 0;
             colDetected[OTHER_COL] = 0;
-
-            player.fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
-            player.fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
-            player.rect.w = player.fp.w;
-            player.rect.h = player.fp.h;
-            player.rect.x = RESOLUTION_X / 2 - player.rect.w / 2;
-            player.rect.y = RESOLUTION_Y / 2 - player.rect.h / 2;
 
             init(&player, &enemy, &bullet);
 

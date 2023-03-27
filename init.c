@@ -17,6 +17,13 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
 
         player->active = 1;
 
+        player->fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
+        player->fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
+        player->rect.w = player->fp.w;
+        player->rect.h = player->fp.h;
+        player->rect.x = RESOLUTION_X / 2 - player->rect.w / 2;
+        player->rect.y = RESOLUTION_Y / 2 - player->rect.h / 2;
+
         while (bullet_i < 50)
         {
             bullet[bullet_i].rect.x = 0;
