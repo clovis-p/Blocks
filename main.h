@@ -7,7 +7,7 @@
 #define RESOLUTION_X_F 1280.0
 #define RESOLUTION_Y_F 720.0
 
-#define NB_ENEMY 14
+#define ENEMY_COUNT 14
 
 typedef struct fpRect
 {

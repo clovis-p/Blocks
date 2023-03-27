@@ -29,7 +29,7 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
             bullet_i++;
         }
 
-        while (enemy_i < NB_ENEMY)
+        while (enemy_i < ENEMY_COUNT)
         {
             enemy[enemy_i].speed = 1;
 
@@ -46,12 +46,12 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
                 enemy[enemy_i].fp.x = 0;
             else if (rand() % 2) // randomize enemy start points (flip a coin, top or bottom)
             {
-                enemy[enemy_i].fp.x = RESOLUTION_X_F / NB_ENEMY * enemy_i;
+                enemy[enemy_i].fp.x = RESOLUTION_X_F / ENEMY_COUNT * enemy_i;
                 enemy[enemy_i].fp.y = 0;
             }
             else
             {
-                enemy[enemy_i].fp.x = RESOLUTION_X_F / NB_ENEMY * enemy_i;
+                enemy[enemy_i].fp.x = RESOLUTION_X_F / ENEMY_COUNT * enemy_i;
                 enemy[enemy_i].fp.y = RESOLUTION_Y_F - enemy[enemy_i].fp.h;
             }
 

@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     int enemy_i = 0;
     int colEnemy = 0;
     int colDetected[5] = {0, 0, 0, 0, 0}; // 0 = left, 1 = down, 2 = right, 3 = up
-    gameObject enemy[NB_ENEMY];
+    gameObject enemy[ENEMY_COUNT];
 
     player.fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
     player.fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
@@ -70,14 +70,14 @@ int main(int argc, char **argv)
     const Uint8* keyStates;
 
     int reset = 0;
-    int enemysRestants = NB_ENEMY;
+    int remainingEnemies = ENEMY_COUNT;
 
     uint32_t previousTicks = 0;
     uint32_t currentTicks = 0;
 
     while (!quit)
     {
-        if (!enemysRestants)
+        if (!remainingEnemies)
             reset = 1;
 
         if (reset)
@@ -180,11 +180,11 @@ int main(int argc, char **argv)
         colDetected[RIGHT_COL] = 0;
         colDetected[UP_COL] = 0;
         colDetected[OTHER_COL] = 0;
-        while (enemy_i < NB_ENEMY)
+        while (enemy_i < ENEMY_COUNT)
         {
             colEnemy = 0;
             colDetected[LEFT_COL] = 0;
-            while (colEnemy < NB_ENEMY)
+            while (colEnemy < ENEMY_COUNT)
             {
                 if (checkCollision(enemy[enemy_i], enemy[colEnemy]) &&
                     enemy[enemy_i].rect.x >= enemy[colEnemy].rect.x + 0.9 * enemy[colEnemy].rect.w &&
@@ -200,7 +200,7 @@ int main(int argc, char **argv)
 
             colEnemy = 0;
             colDetected[RIGHT_COL] = 0;
-            while (colEnemy < NB_ENEMY)
+            while (colEnemy < ENEMY_COUNT)
             {
                 if (checkCollision(enemy[enemy_i], enemy[colEnemy])&&
                     enemy[enemy_i].rect.x + enemy[enemy_i].rect.w <= enemy[colEnemy].rect.x + 0.1 * enemy[colEnemy].rect.w &&
@@ -217,7 +217,7 @@ int main(int argc, char **argv)
 
             colEnemy = 0;
             colDetected[UP_COL] = 0;
-            while (colEnemy < NB_ENEMY)
+            while (colEnemy < ENEMY_COUNT)
             {
                 if (checkCollision(enemy[enemy_i], enemy[colEnemy]) &&
                     enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && ///// ligne magique
@@ -234,7 +234,7 @@ int main(int argc, char **argv)
 
             colEnemy = 0;
             colDetected[DOWN_COL] = 0;
-            while (colEnemy < NB_ENEMY)
+            while (colEnemy < ENEMY_COUNT)
             {
                 if (checkCollision(enemy[enemy_i], enemy[colEnemy]) &&
                     enemy[enemy_i].rect.y + enemy[enemy_i].rect.h <= enemy[colEnemy].rect.y + 0.1 * enemy[colEnemy].rect.h &&
@@ -266,8 +266,8 @@ int main(int argc, char **argv)
         while (bullet_i < 50 && !reset)
         {
             enemy_i = 0;
-            enemysRestants = 0;
-            while (enemy_i < NB_ENEMY)
+            remainingEnemies = 0;
+            while (enemy_i < ENEMY_COUNT)
             {
                 if (enemy[enemy_i].active)
                 {
@@ -292,7 +292,7 @@ int main(int argc, char **argv)
                             enemy[enemy_i].active = 0;
                         }
                     }
-                    enemysRestants++;
+                    remainingEnemies++;
                 }
                 enemy_i++;
             }
@@ -346,7 +346,7 @@ int main(int argc, char **argv)
         SDL_RenderFillRect(ren, &player.rect);
 
         enemy_i = 0;
-        while (enemy_i < NB_ENEMY)
+        while (enemy_i < ENEMY_COUNT)
         {
             if (enemy[enemy_i].active)
             {
