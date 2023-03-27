@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
     gameObject player;
     gameObject bullet[51];
-    int pdirection = 0; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
+    //int player.direction = 0; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
     int shoot = 0;
     int bullet_i = 0;
     int bullet_i2 = 0;
@@ -122,44 +122,44 @@ int main(int argc, char **argv)
         if (keyStates[SDL_SCANCODE_W] && player.rect.y > 0) // up
         {
             player.rect.y -= speed;
-            pdirection = 3; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
+            player.direction = 3; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
         }
         if (keyStates[SDL_SCANCODE_A] && player.rect.x > 0)
         {
             player.rect.x -= speed;
-            pdirection = 1;
+            player.direction = 1;
         }
         if (keyStates[SDL_SCANCODE_W] && keyStates[SDL_SCANCODE_A]) // up/left
         {
-            pdirection = 2;
+            player.direction = 2;
         }
         if (keyStates[SDL_SCANCODE_S] && player.rect.y + player.rect.h < RESOLUTION_Y)
         {
             player.rect.y += speed;
-            pdirection = 7;
+            player.direction = 7;
         }
         if (keyStates[SDL_SCANCODE_A] && keyStates[SDL_SCANCODE_S]) // left/down
         {
-            pdirection = 8;
+            player.direction = 8;
         }
         if (keyStates[SDL_SCANCODE_D] && player.rect.x + player.rect.w < RESOLUTION_X)
         {
             player.rect.x += speed;
-            pdirection = 5;
+            player.direction = 5;
         }
         if (keyStates[SDL_SCANCODE_S] && keyStates[SDL_SCANCODE_D]) // down/right
         {
-            pdirection = 6;
+            player.direction = 6;
         }
         if (keyStates[SDL_SCANCODE_D] && keyStates[SDL_SCANCODE_W]) // right/up
         {
-            pdirection = 4;
+            player.direction = 4;
         }
 
         if (keyStates[SDL_SCANCODE_SPACE] && !shoot) // shoot bullet
         {
             shoot = 1;
-            bullet[bullet_i2].direction = pdirection;
+            bullet[bullet_i2].direction = player.direction;
             bullet[bullet_i2].active = 1;
             bullet[bullet_i2].rect.x = player.rect.x + player.rect.w / 2 - bullet[bullet_i2].rect.w / 2;
             bullet[bullet_i2].rect.y = player.rect.y + player.rect.h / 2 - bullet[bullet_i2].rect.h / 2;
