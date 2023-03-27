@@ -1,6 +1,5 @@
 # Blocks
-Rudimentary 2D shooting game
-Written in C with the SDL library
+Rudimentary 2D shooting game written in C with the SDL library
 
 ## Controls
 - Move with WASD
