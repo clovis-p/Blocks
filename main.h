@@ -25,8 +25,4 @@ typedef struct gameObject
     int speed;
 } gameObject;
 
-int quit;
-int speed;
-int shoot;
-
 #endif // MAIN_H
