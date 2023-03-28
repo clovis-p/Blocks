@@ -16,6 +16,8 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
 
     player->active = 1;
 
+    player->speed = 3;
+
     player->fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
     player->fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
     player->rect.w = player->fp.w;

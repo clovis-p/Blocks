@@ -39,7 +39,6 @@ int main(int argc, char **argv)
 
     init(&player, &enemy, &bullet);
 
-    speed = 3;
     quit = 0;
     shoot = 0;
 
