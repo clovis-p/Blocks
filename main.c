@@ -7,6 +7,7 @@
 #include "main.h"
 #include "init.h"
 #include "collision.h"
+#include "event.h"
 
 #define LEFT_COL 0
 #define DOWN_COL 1
@@ -30,9 +31,7 @@ int main(int argc, char **argv)
 
     gameObject player;
     gameObject bullet[51];
-    int shoot = 0;
     int bullet_i = 0;
-    int bullet_i2 = 0;
     int enemy_i = 0;
     int colEnemy = 0;
     int colDetected[5] = {0, 0, 0, 0, 0}; // 0 = left, 1 = down, 2 = right, 3 = up
@@ -40,9 +39,9 @@ int main(int argc, char **argv)
 
     init(&player, &enemy, &bullet);
 
-    int speed = 3;
-
-    int quit = 0;
+    speed = 3;
+    quit = 0;
+    shoot = 0;
 
     win = SDL_CreateWindow("Blocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESOLUTION_X, RESOLUTION_Y, SDL_WINDOW_SHOWN);
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
@@ -58,8 +57,6 @@ int main(int argc, char **argv)
         printf("Renderer init error: %s\n", SDL_GetError());
         return 3;
     }
-
-    const Uint8* keyStates;
 
     int reset = 0;
     int remainingEnemies = ENEMY_COUNT;
@@ -90,74 +87,7 @@ int main(int argc, char **argv)
             reset = 0;
         }
 
-        SDL_PollEvent(&event);
-
-        if (event.type == SDL_QUIT)
-        {
-            quit = 1;
-        }
-
-        keyStates = SDL_GetKeyboardState(NULL);
-
-        if (keyStates[SDL_SCANCODE_LSHIFT])
-            speed = 6;
-        else
-            speed = 3;
-
-        if (keyStates[SDL_SCANCODE_W] && player.rect.y > 0) // up
-        {
-            player.rect.y -= speed;
-            player.direction = 3; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
-        }
-        if (keyStates[SDL_SCANCODE_A] && player.rect.x > 0)
-        {
-            player.rect.x -= speed;
-            player.direction = 1;
-        }
-        if (keyStates[SDL_SCANCODE_W] && keyStates[SDL_SCANCODE_A]) // up/left
-        {
-            player.direction = 2;
-        }
-        if (keyStates[SDL_SCANCODE_S] && player.rect.y + player.rect.h < RESOLUTION_Y)
-        {
-            player.rect.y += speed;
-            player.direction = 7;
-        }
-        if (keyStates[SDL_SCANCODE_A] && keyStates[SDL_SCANCODE_S]) // left/down
-        {
-            player.direction = 8;
-        }
-        if (keyStates[SDL_SCANCODE_D] && player.rect.x + player.rect.w < RESOLUTION_X)
-        {
-            player.rect.x += speed;
-            player.direction = 5;
-        }
-        if (keyStates[SDL_SCANCODE_S] && keyStates[SDL_SCANCODE_D]) // down/right
-        {
-            player.direction = 6;
-        }
-        if (keyStates[SDL_SCANCODE_D] && keyStates[SDL_SCANCODE_W]) // right/up
-        {
-            player.direction = 4;
-        }
-
-        if (keyStates[SDL_SCANCODE_SPACE] && !shoot) // shoot bullet
-        {
-            shoot = 1;
-            bullet[bullet_i2].direction = player.direction;
-            bullet[bullet_i2].active = 1;
-            bullet[bullet_i2].rect.x = player.rect.x + player.rect.w / 2 - bullet[bullet_i2].rect.w / 2;
-            bullet[bullet_i2].rect.y = player.rect.y + player.rect.h / 2 - bullet[bullet_i2].rect.h / 2;
-
-            if (bullet_i2 < 49)
-                bullet_i2++;
-            else
-                bullet_i2 = 0;
-        }
-        if (!keyStates[SDL_SCANCODE_SPACE])
-        {
-            shoot = 0;
-        }
+        handleEvents(&player, &bullet, event);
 
         enemy_i = 0;
         colDetected[LEFT_COL] = 0;
