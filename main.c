@@ -6,7 +6,7 @@
 
 #include "main.h"
 #include "init.h"
-#include "game.h"
+#include "collision.h"
 
 #define LEFT_COL 0
 #define DOWN_COL 1
