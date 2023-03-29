@@ -5,12 +5,13 @@
 
 #include "main.h"
 #include "event.h"
+#include "bullet.h"
 
 void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
 {
     const Uint8 *keyStates = SDL_GetKeyboardState(NULL);
 
-    static int i = 0;
+    static int lockShooting = 0;
 
     SDL_PollEvent(&event);
 
@@ -60,22 +61,13 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
     {
         player->direction = 4;
     }
-    if (keyStates[SDL_SCANCODE_SPACE] && !shoot) // shoot bullet
+    if (keyStates[SDL_SCANCODE_SPACE] && !lockShooting) // shoot bullet
     {
-        shoot = 1;
-        printf("%d ", i);
-        bullet[i].direction = player->direction;
-        bullet[i].active = 1;
-        bullet[i].rect.x = player->rect.x + player->rect.w / 2 - bullet[i].rect.w / 2;
-        bullet[i].rect.y = player->rect.y + player->rect.h / 2 - bullet[i].rect.h / 2;
-
-        if (i < 49)
-            i++;
-        else
-            i = 0;
+        lockShooting = 1;
+        shootBullet(bullet, player);
     }
     if (!keyStates[SDL_SCANCODE_SPACE])
     {
-        shoot = 0;
+        lockShooting = 0;
     }
 }
