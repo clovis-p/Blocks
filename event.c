@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "main.h"
+#include "event.h"
 
 void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
 {

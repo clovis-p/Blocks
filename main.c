@@ -15,6 +15,9 @@
 #define UP_COL 3
 #define OTHER_COL 4
 
+int quit;
+int shoot;
+
 int main(int argc, char **argv)
 {
     srand(time(NULL));
