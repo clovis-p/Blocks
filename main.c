@@ -103,7 +103,7 @@ int main(int argc, char **argv)
             colDetected[LEFT_COL] = 0;
             while (colEnemy < ENEMY_COUNT)
             {
-                if (checkCollision(enemy[enemy_i], enemy[colEnemy]) &&
+                if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
                     enemy[enemy_i].rect.x >= enemy[colEnemy].rect.x + 0.9 * enemy[colEnemy].rect.w &&
                     colEnemy != enemy_i)
                 {
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
             colDetected[RIGHT_COL] = 0;
             while (colEnemy < ENEMY_COUNT)
             {
-                if (checkCollision(enemy[enemy_i], enemy[colEnemy])&&
+                if (overlap(enemy[enemy_i], enemy[colEnemy])&&
                     enemy[enemy_i].rect.x + enemy[enemy_i].rect.w <= enemy[colEnemy].rect.x + 0.1 * enemy[colEnemy].rect.w &&
                     colEnemy != enemy_i)
                 {
@@ -136,8 +136,8 @@ int main(int argc, char **argv)
             colDetected[UP_COL] = 0;
             while (colEnemy < ENEMY_COUNT)
             {
-                if (checkCollision(enemy[enemy_i], enemy[colEnemy]) &&
-                    enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && ///// ligne magique
+                if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
+                    enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && // Dirty fix for a bug I don't understand
                     enemy[enemy_i].rect.y >= enemy[colEnemy].rect.y + 0.9 * enemy[colEnemy].rect.h &&
                     colEnemy != enemy_i)
                 {
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
             colDetected[DOWN_COL] = 0;
             while (colEnemy < ENEMY_COUNT)
             {
-                if (checkCollision(enemy[enemy_i], enemy[colEnemy]) &&
+                if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
                     enemy[enemy_i].rect.y + enemy[enemy_i].rect.h <= enemy[colEnemy].rect.y + 0.1 * enemy[colEnemy].rect.h &&
                     colEnemy != enemy_i)
                 {
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
 
             colEnemy = 0;
 
-            if (checkCollision(enemy[enemy_i], player))
+            if (overlap(enemy[enemy_i], player))
             {
                 reset = 1;
             }

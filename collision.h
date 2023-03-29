@@ -1,7 +1,7 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-int checkCollision();
+int overlap();
 
 #endif // COLLISION_H
 

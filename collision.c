@@ -5,7 +5,7 @@
 
 #include "main.h"
 
-int checkCollision(gameObject o1, gameObject o2)
+int overlap(gameObject o1, gameObject o2)
 {
     int o1top = o1.rect.y;
     int o1left = o1.rect.x;
