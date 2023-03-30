@@ -25,12 +25,12 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
     else
         player->speed = 3;
 
-    if (keyStates[SDL_SCANCODE_W] && player->rect.y > 0) // up
+    if (keyStates[SDL_SCANCODE_W] && !player->collision.up) // up
     {
         player->rect.y -= player->speed;
         player->direction = 3; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
     }
-    if (keyStates[SDL_SCANCODE_A] && player->rect.x > 0)
+    if (keyStates[SDL_SCANCODE_A] && !player->collision.left)
     {
         player->rect.x -= player->speed;
         player->direction = 1;
@@ -39,7 +39,7 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
     {
         player->direction = 2;
     }
-    if (keyStates[SDL_SCANCODE_S] && player->rect.y + player->rect.h < RESOLUTION_Y)
+    if (keyStates[SDL_SCANCODE_S] && !player->collision.down)
     {
         player->rect.y += player->speed;
         player->direction = 7;
@@ -48,7 +48,7 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
     {
         player->direction = 8;
     }
-    if (keyStates[SDL_SCANCODE_D] && player->rect.x + player->rect.w < RESOLUTION_X)
+    if (keyStates[SDL_SCANCODE_D] && !player->collision.right)
     {
         player->rect.x += player->speed;
         player->direction = 5;

@@ -15,6 +15,14 @@ typedef struct fpRect
     float w, h;
 } fpRect;
 
+typedef struct collision
+{
+    int left;
+    int up;
+    int right;
+    int down;
+} collision;
+
 typedef struct gameObject
 {
     SDL_Rect rect;
@@ -23,6 +31,7 @@ typedef struct gameObject
     int direction;
     int active;
     int speed;
+    collision collision;
 } gameObject;
 
 #endif // MAIN_H
