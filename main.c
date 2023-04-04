@@ -9,6 +9,7 @@
 #include "collision.h"
 #include "event.h"
 #include "bullet.h"
+#include "render.h"
 
 int quit;
 int shoot;
@@ -82,10 +83,6 @@ int main(int argc, char **argv)
 
         checkEnemyCollisions(&enemy, player);
 
-        SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
-        SDL_RenderClear(ren);
-        SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
-
         while (bullet_i < 50 && !reset)
         {
             enemy_i = 0;
@@ -111,31 +108,13 @@ int main(int argc, char **argv)
             }
             enemy_i = 0;
 
-            if (bullet[bullet_i].active)
-                SDL_RenderFillRect(ren, &bullet[bullet_i].rect);
-
             bullet_i++;
         }
         bullet_i = 0;
 
         updateBulletsPos(&bullet);
 
-        SDL_SetRenderDrawColor(ren, player.color.r, player.color.g, player.color.b, 255);
-        SDL_RenderFillRect(ren, &player.rect);
-
-        enemy_i = 0;
-        while (enemy_i < ENEMY_COUNT)
-        {
-            if (enemy[enemy_i].active)
-            {
-                SDL_SetRenderDrawColor(ren, enemy[enemy_i].color.r, enemy[enemy_i].color.g, enemy[enemy_i].color.b, 255);
-                SDL_RenderFillRect(ren, &enemy[enemy_i].rect);
-            }
-            enemy_i++;
-        }
-        enemy_i = 0;
-
-        SDL_RenderPresent(ren);
+        render(ren, player, enemy, bullet);
 
         currentTicks = SDL_GetTicks();
 
