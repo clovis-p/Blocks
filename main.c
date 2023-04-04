@@ -8,6 +8,7 @@
 #include "init.h"
 #include "collision.h"
 #include "event.h"
+#include "bullet.h"
 
 int quit;
 int shoot;
@@ -111,48 +112,13 @@ int main(int argc, char **argv)
             enemy_i = 0;
 
             if (bullet[bullet_i].active)
-            {   // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
-                if (bullet[bullet_i].direction == 1 || bullet[bullet_i].direction == 0)
-                {
-                    bullet[bullet_i].rect.x -= bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 2)
-                {
-                    bullet[bullet_i].rect.x -= bullet[bullet_i].speed;
-                    bullet[bullet_i].rect.y -= bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 3)
-                {
-                    bullet[bullet_i].rect.y -= bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 4)
-                {
-                    bullet[bullet_i].rect.y -= bullet[bullet_i].speed;
-                    bullet[bullet_i].rect.x += bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 5)
-                {
-                    bullet[bullet_i].rect.x += bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 6)
-                {
-                    bullet[bullet_i].rect.x += bullet[bullet_i].speed;
-                    bullet[bullet_i].rect.y += bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 7)
-                {
-                    bullet[bullet_i].rect.y += bullet[bullet_i].speed;
-                }
-                if (bullet[bullet_i].direction == 8)
-                {
-                    bullet[bullet_i].rect.y += bullet[bullet_i].speed;
-                    bullet[bullet_i].rect.x -= bullet[bullet_i].speed;
-                }
                 SDL_RenderFillRect(ren, &bullet[bullet_i].rect);
-            }
+
             bullet_i++;
         }
         bullet_i = 0;
+
+        updateBulletsPos(&bullet);
 
         SDL_SetRenderDrawColor(ren, player.color.r, player.color.g, player.color.b, 255);
         SDL_RenderFillRect(ren, &player.rect);
