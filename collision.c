@@ -33,39 +33,53 @@ int overlap(gameObject o1, gameObject o2)
     }
 }
 
-void checkIfWithinBounds(gameObject *o)
+void checkIfWithinBounds(gameObject *o, int flag)
 {
     if (o->rect.x <= 0)
     {
-        o->collision.left = 1;
+        if (flag == SET_COLLISION)
+            o->collision.left = 1;
+        if (flag == SET_INACTIVE)
+            o->active = 0;
     }
     else
     {
-        o->collision.left = 0;
+        if (flag == SET_COLLISION)
+            o->collision.left = 0;
     }
     if (o->rect.x + o->rect.w >= RESOLUTION_X)
     {
-        o->collision.right = 1;
+        if (flag == SET_COLLISION)
+            o->collision.right = 1;
+        if (flag == SET_INACTIVE)
+            o->active = 0;
     }
     else
     {
-        o->collision.right = 0;
+        if (flag == SET_COLLISION)
+            o->collision.right = 0;
     }
     if (o->rect.y <= 0)
     {
         o->collision.up = 1;
+        if (flag == SET_INACTIVE)
+            o->active = 0;
     }
     else
     {
-        o->collision.up = 0;
+        if (flag == SET_COLLISION)
+            o->collision.up = 0;
     }
     if (o->rect.y + o->rect.h >= RESOLUTION_Y)
     {
         o->collision.down = 1;
+        if (flag == SET_INACTIVE)
+            o->active = 0;
     }
     else
     {
-        o->collision.down = 0;
+        if (flag == SET_COLLISION)
+            o->collision.down = 0;
     }
 }
 

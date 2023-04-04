@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
         handleEvents(&player, &bullet, event);
 
-        checkIfWithinBounds(&player);
+        checkIfWithinBounds(&player, SET_COLLISION);
 
         checkEnemyCollisions(&enemy, player);
 
@@ -93,19 +93,9 @@ int main(int argc, char **argv)
             {
                 if (enemy[enemy_i].active)
                 {
-                    if (bullet[bullet_i].rect.x > RESOLUTION_X ||
-                        bullet[bullet_i].rect.x + bullet[bullet_i].rect.w < 0 ||
-                        bullet[bullet_i].rect.y + bullet[bullet_i].rect.h > RESOLUTION_Y ||
-                        bullet[bullet_i].rect.y < 0)
-                    {
-                        bullet[bullet_i].active = 0;
-                    }
+                    checkIfWithinBounds(&bullet[bullet_i], SET_INACTIVE);
 
-                    if (bullet[bullet_i].active &&
-                        bullet[bullet_i].rect.x + bullet[bullet_i].rect.w - 1 >= enemy[enemy_i].rect.x &&
-                        bullet[bullet_i].rect.x <= enemy[enemy_i].rect.x + enemy[enemy_i].rect.w - 1 &&
-                        bullet[bullet_i].rect.y + bullet[bullet_i].rect.h - 1 >= enemy[enemy_i].rect.y &&
-                        bullet[bullet_i].rect.y <= enemy[enemy_i].rect.y + enemy[enemy_i].rect.h - 1)
+                    if (bullet[bullet_i].active && overlap(bullet[bullet_i], enemy[enemy_i]))
                     {
                         enemy[enemy_i].rect.w -= 1;
                         enemy[enemy_i].rect.h -= 1;
