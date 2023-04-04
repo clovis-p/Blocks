@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "main.h"
+#include "collision.h"
 
 int overlap(gameObject o1, gameObject o2)
 {
@@ -29,5 +30,124 @@ int overlap(gameObject o1, gameObject o2)
     else
     {
         return 0;
+    }
+}
+
+void checkIfWithinBounds(gameObject *o)
+{
+    if (o->rect.x <= 0)
+    {
+        o->collision.left = 1;
+    }
+    else
+    {
+        o->collision.left = 0;
+    }
+    if (o->rect.x + o->rect.w >= RESOLUTION_X)
+    {
+        o->collision.right = 1;
+    }
+    else
+    {
+        o->collision.right = 0;
+    }
+    if (o->rect.y <= 0)
+    {
+        o->collision.up = 1;
+    }
+    else
+    {
+        o->collision.up = 0;
+    }
+    if (o->rect.y + o->rect.h >= RESOLUTION_Y)
+    {
+        o->collision.down = 1;
+    }
+    else
+    {
+        o->collision.down = 0;
+    }
+}
+
+void checkEnemyCollisions(gameObject *enemy, gameObject player)
+{
+    int enemy_i = 0;
+    int colEnemy = 0;
+    while (enemy_i < ENEMY_COUNT)
+    {
+        colEnemy = 0;
+        enemy[enemy_i].collision.left = 0;
+        while (colEnemy < ENEMY_COUNT)
+        {
+            if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
+                enemy[enemy_i].rect.x >= enemy[colEnemy].rect.x + 0.9 * enemy[colEnemy].rect.w &&
+                colEnemy != enemy_i)
+            {
+                enemy[enemy_i].collision.left = 1;
+            }
+            colEnemy++;
+        }
+        if (enemy[enemy_i].rect.x + enemy[enemy_i].rect.w / 2 > player.rect.x + player.rect.w / 2 && !enemy[enemy_i].collision.left && enemy[enemy_i].active) // move left
+            enemy[enemy_i].rect.x -= enemy[enemy_i].speed + rand() % 2;
+
+
+        colEnemy = 0;
+        enemy[enemy_i].collision.right = 0;
+        while (colEnemy < ENEMY_COUNT)
+        {
+            if (overlap(enemy[enemy_i], enemy[colEnemy])&&
+                enemy[enemy_i].rect.x + enemy[enemy_i].rect.w <= enemy[colEnemy].rect.x + 0.1 * enemy[colEnemy].rect.w &&
+                colEnemy != enemy_i)
+            {
+                enemy[enemy_i].collision.right = 1;
+            }
+
+            colEnemy++;
+        }
+        if (enemy[enemy_i].rect.x + enemy[enemy_i].rect.w / 2 < player.rect.x + player.rect.w / 2 && !enemy[enemy_i].collision.right && enemy[enemy_i].active) // move right
+            enemy[enemy_i].rect.x += enemy[enemy_i].speed + rand() % 2;
+
+
+        colEnemy = 0;
+        enemy[enemy_i].collision.up = 0;
+        while (colEnemy < ENEMY_COUNT)
+        {
+            if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
+                enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && // Dirty fix for a bug I don't understand
+                enemy[enemy_i].rect.y >= enemy[colEnemy].rect.y + 0.9 * enemy[colEnemy].rect.h &&
+                colEnemy != enemy_i)
+            {
+                enemy[enemy_i].collision.up = 1;
+            }
+
+            colEnemy++;
+        }
+        if (enemy[enemy_i].rect.y + enemy[enemy_i].rect.h / 2 > player.rect.y + player.rect.h / 2 && !enemy[enemy_i].collision.up && enemy[enemy_i].active) // move up
+            enemy[enemy_i].rect.y -= enemy[enemy_i].speed + rand() % 2; // + 0 ou + 1
+
+        colEnemy = 0;
+        enemy[enemy_i].collision.down = 0;
+        while (colEnemy < ENEMY_COUNT)
+        {
+            if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
+                enemy[enemy_i].rect.y + enemy[enemy_i].rect.h <= enemy[colEnemy].rect.y + 0.1 * enemy[colEnemy].rect.h &&
+                colEnemy != enemy_i)
+            {
+                enemy[enemy_i].collision.down = 1;
+            }
+
+            colEnemy++;
+        }
+        if (enemy[enemy_i].rect.y + enemy[enemy_i].rect.h / 2 < player.rect.y + player.rect.h / 2 && !enemy[enemy_i].collision.down && enemy[enemy_i].active) // move down
+            enemy[enemy_i].rect.y += enemy[enemy_i].speed + rand() % 2;
+
+        colEnemy = 0;
+
+        if (overlap(enemy[enemy_i], player))
+        {
+            reset = 1;
+        }
+
+        enemy_i++;
     }
 }

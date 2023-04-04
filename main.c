@@ -11,6 +11,7 @@
 
 int quit;
 int shoot;
+int reset;
 
 int main(int argc, char **argv)
 {
@@ -30,7 +31,6 @@ int main(int argc, char **argv)
     gameObject bullet[51];
     int bullet_i = 0;
     int enemy_i = 0;
-    int colEnemy = 0;
     gameObject enemy[ENEMY_COUNT];
 
     init(&player, &enemy, &bullet);
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         return 3;
     }
 
-    int reset = 0;
+    reset = 0;
     int remainingEnemies = ENEMY_COUNT;
 
     uint32_t previousTicks = 0;
@@ -69,7 +69,6 @@ int main(int argc, char **argv)
             SDL_Delay(2000);
             bullet_i = 0;
             enemy_i = 0;
-            colEnemy = 0;
 
             init(&player, &enemy, &bullet);
 
@@ -78,118 +77,9 @@ int main(int argc, char **argv)
 
         handleEvents(&player, &bullet, event);
 
-        if (player.rect.x <= 0)
-        {
-            player.collision.left = 1;
-        }
-        else
-        {
-            player.collision.left = 0;
-        }
-        if (player.rect.x + player.rect.w >= RESOLUTION_X)
-        {
-            player.collision.right = 1;
-        }
-        else
-        {
-            player.collision.right = 0;
-        }
-        if (player.rect.y <= 0)
-        {
-            player.collision.up = 1;
-        }
-        else
-        {
-            player.collision.up = 0;
-        }
-        if (player.rect.y + player.rect.h >= RESOLUTION_Y)
-        {
-            player.collision.down = 1;
-        }
-        else
-        {
-            player.collision.down = 0;
-        }
+        checkIfWithinBounds(&player);
 
-        enemy_i = 0;
-        while (enemy_i < ENEMY_COUNT)
-        {
-            colEnemy = 0;
-            enemy[enemy_i].collision.left = 0;
-            while (colEnemy < ENEMY_COUNT)
-            {
-                if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
-                    enemy[enemy_i].rect.x >= enemy[colEnemy].rect.x + 0.9 * enemy[colEnemy].rect.w &&
-                    colEnemy != enemy_i)
-                {
-                    enemy[enemy_i].collision.left = 1;
-                }
-                colEnemy++;
-            }
-            if (enemy[enemy_i].rect.x + enemy[enemy_i].rect.w / 2 > player.rect.x + player.rect.w / 2 && !enemy[enemy_i].collision.left && enemy[enemy_i].active) // move left
-                enemy[enemy_i].rect.x -= enemy[enemy_i].speed + rand() % 2;
-
-
-            colEnemy = 0;
-            enemy[enemy_i].collision.right = 0;
-            while (colEnemy < ENEMY_COUNT)
-            {
-                if (overlap(enemy[enemy_i], enemy[colEnemy])&&
-                    enemy[enemy_i].rect.x + enemy[enemy_i].rect.w <= enemy[colEnemy].rect.x + 0.1 * enemy[colEnemy].rect.w &&
-                    colEnemy != enemy_i)
-                {
-                    enemy[enemy_i].collision.right = 1;
-                }
-
-                colEnemy++;
-            }
-            if (enemy[enemy_i].rect.x + enemy[enemy_i].rect.w / 2 < player.rect.x + player.rect.w / 2 && !enemy[enemy_i].collision.right && enemy[enemy_i].active) // move right
-                enemy[enemy_i].rect.x += enemy[enemy_i].speed + rand() % 2;
-
-
-            colEnemy = 0;
-            enemy[enemy_i].collision.up = 0;
-            while (colEnemy < ENEMY_COUNT)
-            {
-                if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
-                    enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && // Dirty fix for a bug I don't understand
-                    enemy[enemy_i].rect.y >= enemy[colEnemy].rect.y + 0.9 * enemy[colEnemy].rect.h &&
-                    colEnemy != enemy_i)
-                {
-                    enemy[enemy_i].collision.up = 1;
-                }
-
-                colEnemy++;
-            }
-            if (enemy[enemy_i].rect.y + enemy[enemy_i].rect.h / 2 > player.rect.y + player.rect.h / 2 && !enemy[enemy_i].collision.up && enemy[enemy_i].active) // move up
-                enemy[enemy_i].rect.y -= enemy[enemy_i].speed + rand() % 2; // + 0 ou + 1
-
-            colEnemy = 0;
-            enemy[enemy_i].collision.down = 0;
-            while (colEnemy < ENEMY_COUNT)
-            {
-                if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
-                    enemy[enemy_i].rect.y + enemy[enemy_i].rect.h <= enemy[colEnemy].rect.y + 0.1 * enemy[colEnemy].rect.h &&
-                    colEnemy != enemy_i)
-                {
-                    enemy[enemy_i].collision.down = 1;
-                }
-
-                colEnemy++;
-            }
-            if (enemy[enemy_i].rect.y + enemy[enemy_i].rect.h / 2 < player.rect.y + player.rect.h / 2 && !enemy[enemy_i].collision.down && enemy[enemy_i].active) // move down
-                enemy[enemy_i].rect.y += enemy[enemy_i].speed + rand() % 2;
-
-            colEnemy = 0;
-
-            if (overlap(enemy[enemy_i], player))
-            {
-                reset = 1;
-            }
-
-            enemy_i++;
-        }
-        enemy_i = 0;
+        checkEnemyCollisions(&enemy, player);
 
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
