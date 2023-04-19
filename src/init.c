@@ -10,6 +10,8 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
     int enemy_i = 0;
     int bullet_i = 0;
 
+    const int min_brightness = 100;
+
     player->color.r = 0;
     player->color.g = 0;
     player->color.b = 255;
@@ -41,9 +43,9 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
     {
         enemy[enemy_i].speed = 1;
 
-        enemy[enemy_i].color.r = rand() % 256; // random color 0 - 255
-        enemy[enemy_i].color.g = rand() % 256;
-        enemy[enemy_i].color.b = rand() % 256;
+        enemy[enemy_i].color.r = rand() % (256 - min_brightness) + min_brightness; // random number, min: min_brightness, max 255
+        enemy[enemy_i].color.g = rand() % (256 - min_brightness) + min_brightness;
+        enemy[enemy_i].color.b = rand() % (256 - min_brightness) + min_brightness;
 
         enemy[enemy_i].fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
         enemy[enemy_i].fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
