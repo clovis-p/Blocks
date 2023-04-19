@@ -17,6 +17,7 @@ int reset;
 
 int main(int argc, char **argv)
 {
+    return 0;
     srand(time(NULL));
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
