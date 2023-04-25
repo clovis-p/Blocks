@@ -6,10 +6,10 @@
 #include "main.h"
 #include "render.h"
 
-void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, int b);
-void renderPlayer(SDL_Renderer *ren, gameObject player);
-void renderBullets(SDL_Renderer* ren, gameObject bullet[]);
-void renderEnemies(SDL_Renderer *ren, gameObject enemy[]);
+static void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, int b);
+static void renderPlayer(SDL_Renderer *ren, gameObject player);
+static void renderBullets(SDL_Renderer* ren, gameObject bullet[]);
+static void renderEnemies(SDL_Renderer *ren, gameObject enemy[]);
 
 void render(SDL_Renderer *ren, gameObject player, gameObject enemy[], gameObject bullet[])
 {
@@ -23,18 +23,18 @@ void render(SDL_Renderer *ren, gameObject player, gameObject enemy[], gameObject
     SDL_RenderPresent(ren);
 }
 
-void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, int b)
+static void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, int b)
 {
     SDL_SetRenderDrawColor(ren, r, g, b, 255);
     SDL_RenderFillRect(ren, &o.rect);
 }
 
-void renderPlayer(SDL_Renderer *ren, gameObject player)
+static void renderPlayer(SDL_Renderer *ren, gameObject player)
 {
     renderObjectAsRect(ren, player, 0, 0, 255);
 }
 
-void renderBullets(SDL_Renderer* ren, gameObject bullet[])
+static void renderBullets(SDL_Renderer* ren, gameObject bullet[])
 {
     int i = 0;
     while (i < 50)
@@ -47,7 +47,7 @@ void renderBullets(SDL_Renderer* ren, gameObject bullet[])
     }
 }
 
-void renderEnemies(SDL_Renderer *ren, gameObject enemy[])
+static void renderEnemies(SDL_Renderer *ren, gameObject enemy[])
 {
     int i = 0;
     while (i < ENEMY_COUNT)
