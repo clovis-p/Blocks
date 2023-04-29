@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <SDL2/SDL.h>
 
 #include "main.h"
@@ -9,16 +6,16 @@
 static void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, int b);
 static void renderPlayer(SDL_Renderer *ren, gameObject player);
 static void renderBullets(SDL_Renderer* ren, gameObject bullet[]);
-static void renderEnemies(SDL_Renderer *ren, gameObject enemy[]);
+static void renderEnemies(SDL_Renderer *ren, gameObject enemy[], SDL_Texture *texture[]);
 
-void render(SDL_Renderer *ren, gameObject player, gameObject enemy[], gameObject bullet[])
+void render(SDL_Renderer *ren, gameObject player, gameObject enemy[], SDL_Texture *enemyTexture[], gameObject bullet[])
 {
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
 
     renderBullets(ren, bullet);
     renderPlayer(ren, player);
-    renderEnemies(ren, enemy);
+    renderEnemies(ren, enemy, enemyTexture);
 
     SDL_RenderPresent(ren);
 }
@@ -47,14 +44,15 @@ static void renderBullets(SDL_Renderer* ren, gameObject bullet[])
     }
 }
 
-static void renderEnemies(SDL_Renderer *ren, gameObject enemy[])
+static void renderEnemies(SDL_Renderer *ren, gameObject enemy[], SDL_Texture *texture[])
 {
     int i = 0;
     while (i < ENEMY_COUNT)
     {
         if (enemy[i].active)
         {
-            renderObjectAsRect(ren, enemy[i], enemy[i].color.r, enemy[i].color.g, enemy[i].color.b);
+            //renderObjectAsRect(ren, enemy[i], enemy[i].color.r, enemy[i].color.g, enemy[i].color.b);
+            SDL_RenderCopy(ren, texture[i], NULL, &enemy[i].rect);
         }
         i++;
     }

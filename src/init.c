@@ -1,14 +1,17 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "main.h"
+#include "init.h"
 
-void init(gameObject *player, gameObject *enemy, gameObject *bullet)
+void init(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Texture **enemyTexture, gameObject *bullet)
 {
     int enemy_i = 0;
     int bullet_i = 0;
+
+    char file[100];
 
     const int min_brightness = 100;
 
@@ -68,6 +71,18 @@ void init(gameObject *player, gameObject *enemy, gameObject *bullet)
         enemy[enemy_i].rect.x = enemy[enemy_i].fp.x;
         enemy[enemy_i].rect.y = enemy[enemy_i].fp.y;
         enemy[enemy_i].active = 1;
+
+        sprintf(file, "../resources/enemy/%d.png", (rand() % 9));
+        enemyTexture[enemy_i] = loadImageAsTexture(ren, file);
+
         enemy_i++;
     }
+}
+
+SDL_Texture *loadImageAsTexture(SDL_Renderer *ren, char file[])
+{
+    SDL_Surface *imageSurface = IMG_Load(file);
+    SDL_Texture *imageTexture = SDL_CreateTextureFromSurface(ren, imageSurface);
+
+    return imageTexture;
 }

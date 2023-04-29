@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "main.h"
 #include "init.h"
@@ -25,6 +26,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    if (IMG_Init(IMG_INIT_PNG) < 0)
+    {
+        printf("Error initializing SDL_image: %s\n", SDL_GetError());
+        return 1;
+    }
+
     SDL_Window *win = NULL;
     SDL_Renderer *ren = NULL;
     SDL_Event event;
@@ -34,8 +41,7 @@ int main(int argc, char **argv)
     int bullet_i = 0;
     int enemy_i = 0;
     gameObject enemy[ENEMY_COUNT];
-
-    init(&player, &enemy, &bullet);
+    SDL_Texture *enemyTexture[ENEMY_COUNT];
 
     quit = 0;
     shoot = 0;
@@ -55,6 +61,8 @@ int main(int argc, char **argv)
         return 3;
     }
 
+    init(ren, &player, &enemy, &enemyTexture, &bullet);
+
     reset = 0;
     int remainingEnemies = ENEMY_COUNT;
 
@@ -72,7 +80,7 @@ int main(int argc, char **argv)
             bullet_i = 0;
             enemy_i = 0;
 
-            init(&player, &enemy, &bullet);
+            init(ren, &player, &enemy, &enemyTexture, &bullet);
 
             reset = 0;
         }
@@ -114,7 +122,7 @@ int main(int argc, char **argv)
 
         updateBulletsPos(&bullet);
 
-        render(ren, player, enemy, bullet);
+        render(ren, player, enemy, enemyTexture, bullet);
 
         currentTicks = SDL_GetTicks();
 
@@ -127,6 +135,7 @@ int main(int argc, char **argv)
     SDL_DestroyWindow(win);
     SDL_DestroyRenderer(ren);
 
+    IMG_Quit();
     SDL_Quit();
     return 0;
 }
