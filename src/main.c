@@ -20,6 +20,7 @@ int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented
 
 int main(int argc, char **argv)
 {
+    return 0;
     srand(time(NULL));
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
