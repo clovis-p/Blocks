@@ -79,6 +79,11 @@ void init(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Texture 
     }
 }
 
+void gameOver()
+{
+
+}
+
 SDL_Texture *loadImageAsTexture(SDL_Renderer *ren, char file[])
 {
     SDL_Surface *imageSurface = IMG_Load(file);

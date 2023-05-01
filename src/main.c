@@ -16,6 +16,8 @@ int quit;
 int shoot;
 int reset;
 
+int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented yet), 2: Game over state
+
 int main(int argc, char **argv)
 {
     srand(time(NULL));
@@ -69,29 +71,56 @@ int main(int argc, char **argv)
     uint32_t previousTicks = 0;
     uint32_t currentTicks = 0;
 
+    uint32_t resetTimerPreviousTicks = 0;
+
+    gameState = 0; // 0: Normal in-game state, 1: Paused game state (not implemented yet), 2: Game over state
+
+    int lol;
+
     while (!quit)
     {
-        if (!remainingEnemies)
+        if (!remainingEnemies && gameState == 0)
             reset = 1;
 
         if (reset)
         {
-            SDL_Delay(2000);
-            bullet_i = 0;
-            enemy_i = 0;
-
-            init(ren, &player, &enemy, &enemyTexture, &bullet);
-
+            gameState = 2;
+            resetTimerPreviousTicks = SDL_GetTicks();
+            printf("reset %d %d\n", reset, gameState);
             reset = 0;
         }
 
+        if (gameState == 0)
+        {
+            checkIfWithinBounds(&player, SET_COLLISION);
+
+            checkEnemyCollisions(&enemy, player); // check collisions and update enemy pos
+        }
+        else if (gameState == 2)
+        {
+            if (currentTicks - resetTimerPreviousTicks < 2000)
+            {
+                printf("%d\n", currentTicks - resetTimerPreviousTicks);
+                lol = 1;
+            }
+            else if (lol == 1)
+            {
+                bullet_i = 0;
+                enemy_i = 0;
+                printf("init\n\n");
+                init(ren, &player, &enemy, &enemyTexture, &bullet);
+                gameState = 0;
+                lol = 0;
+            }
+        }
+
+        /*  About the "lol" variable: I do not understand why this is needed, but apparently it is, otherwise the 2000ms
+         *  delay does not happen. Removing "gameState = 0;" makes the delay work for some reason, but it is necessary
+         *  to set it to zero to restart the game. */
+
         handleEvents(&player, &bullet, event);
 
-        checkIfWithinBounds(&player, SET_COLLISION);
-
-        checkEnemyCollisions(&enemy, player);
-
-        while (bullet_i < 50 && !reset)
+        while (bullet_i < 50 && !reset) // apply damage to shot enemies and count remaining enemies
         {
             enemy_i = 0;
             remainingEnemies = 0;

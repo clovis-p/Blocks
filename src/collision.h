@@ -9,6 +9,7 @@ void checkIfWithinBounds(gameObject *o, int flag);
 void checkEnemyCollisions(gameObject *enemy, gameObject player);
 
 extern int reset;
+extern int gameState;
 
 #endif // COLLISION_H
 
