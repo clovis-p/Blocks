@@ -1,10 +1,30 @@
 #include <stdlib.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "main.h"
 #include "init.h"
+
+int init()
+{
+    srand(time(NULL));
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("Error initializing SDL: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    if (IMG_Init(IMG_INIT_PNG) < 0)
+    {
+        printf("Error initializing SDL_image: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    return 1;
+}
 
 void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Texture **enemyTexture, gameObject *bullet)
 {

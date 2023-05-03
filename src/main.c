@@ -11,6 +11,7 @@
 #include "event.h"
 #include "bullet.h"
 #include "render.h"
+#include "quit.h"
 
 int quit;
 int shoot;
@@ -20,18 +21,9 @@ int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented
 
 int main(int argc, char **argv)
 {
-    srand(time(NULL));
-
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (!init())
     {
-        printf("Error initializing SDL: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    if (IMG_Init(IMG_INIT_PNG) < 0)
-    {
-        printf("Error initializing SDL_image: %s\n", SDL_GetError());
-        return 1;
+        return -1;
     }
 
     SDL_Window *win = NULL;
@@ -164,7 +156,6 @@ int main(int argc, char **argv)
     SDL_DestroyWindow(win);
     SDL_DestroyRenderer(ren);
 
-    IMG_Quit();
-    SDL_Quit();
+    quitF();
     return 0;
 }
