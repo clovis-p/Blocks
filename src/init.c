@@ -6,7 +6,7 @@
 #include "main.h"
 #include "init.h"
 
-void init(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Texture **enemyTexture, gameObject *bullet)
+void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Texture **enemyTexture, gameObject *bullet)
 {
     int enemy_i = 0;
     int bullet_i = 0;

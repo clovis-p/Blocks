@@ -63,7 +63,7 @@ int main(int argc, char **argv)
         return 3;
     }
 
-    init(ren, &player, &enemy, &enemyTexture, &bullet);
+    initGame(ren, &player, &enemy, &enemyTexture, &bullet);
 
     reset = 0;
     int remainingEnemies = ENEMY_COUNT;
@@ -107,8 +107,8 @@ int main(int argc, char **argv)
             {
                 bullet_i = 0;
                 enemy_i = 0;
-                printf("init\n\n");
-                init(ren, &player, &enemy, &enemyTexture, &bullet);
+                printf("initGame\n\n");
+                initGame(ren, &player, &enemy, &enemyTexture, &bullet);
                 gameState = 0;
                 lol = 0;
             }
