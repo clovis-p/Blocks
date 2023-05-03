@@ -66,12 +66,18 @@ int main(int argc, char **argv)
             resetTimerPreviousTicks = SDL_GetTicks();
             reset = 0;
         }
-
+        printf("%d\n", gameState);
         if (gameState == 0)
         {
             checkIfWithinBounds(&player, SET_COLLISION);
 
             checkEnemyCollisions(&enemy, player); // check collisions and update enemy pos
+
+            updateBulletsPos(&bullet);
+        }
+        else if (gameState == 1)
+        {
+
         }
         else if (gameState == 2)
         {
@@ -87,6 +93,8 @@ int main(int argc, char **argv)
                 gameState = 0;
                 lol = 0;
             }
+
+            updateBulletsPos(&bullet);
         }
 
         /*  About the "lol" variable: I do not understand why this is needed, but apparently it is, otherwise the 2000ms
@@ -123,8 +131,6 @@ int main(int argc, char **argv)
             bullet_i++;
         }
         bullet_i = 0;
-
-        updateBulletsPos(&bullet);
 
         render(ren, player, enemy, enemyTexture, bullet);
 
