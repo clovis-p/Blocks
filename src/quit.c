@@ -6,10 +6,11 @@
 
 void quitF(SDL_Window **win, SDL_Renderer **ren)
 {
-    SDL_DestroyWindow(*win);
     SDL_DestroyRenderer(*ren);
+    SDL_DestroyWindow(*win);
 
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
+
 }
