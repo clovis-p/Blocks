@@ -9,7 +9,7 @@
 void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
 {
     const Uint8 *keyStates = SDL_GetKeyboardState(NULL);
-    printf("Checking events\n");
+
     static int lockShooting = 0;  // These make stuff happen only once
     static int lockPause = 0;     // until it's associated key is released
 
@@ -78,11 +78,9 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
             else if (gameState == 1) {
                 gameState = 0;
             }
-            printf("Escape\n");
         }
         if (!keyStates[SDL_SCANCODE_ESCAPE]) {
             lockPause = 0;
-            printf("Not Escape\n");
         }
     }
 }

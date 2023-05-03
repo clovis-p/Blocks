@@ -66,7 +66,7 @@ int main(int argc, char **argv)
             resetTimerPreviousTicks = SDL_GetTicks();
             reset = 0;
         }
-        printf("%d\n", gameState);
+
         if (gameState == 0)
         {
             checkIfWithinBounds(&player, SET_COLLISION);
