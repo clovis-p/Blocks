@@ -78,7 +78,6 @@ int main(int argc, char **argv)
         {
             gameState = 2;
             resetTimerPreviousTicks = SDL_GetTicks();
-            printf("reset %d %d\n", reset, gameState);
             reset = 0;
         }
 
@@ -92,14 +91,12 @@ int main(int argc, char **argv)
         {
             if (currentTicks - resetTimerPreviousTicks < 2000)
             {
-                printf("%d\n", currentTicks - resetTimerPreviousTicks);
                 lol = 1;
             }
             else if (lol == 1)
             {
                 bullet_i = 0;
                 enemy_i = 0;
-                printf("initGame\n\n");
                 initGame(ren, &player, &enemy, &enemyTexture, &bullet);
                 gameState = 0;
                 lol = 0;
