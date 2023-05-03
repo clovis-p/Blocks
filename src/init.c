@@ -3,11 +3,12 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "main.h"
 #include "init.h"
 
-int init()
+int init(SDL_Window **win, SDL_Renderer **ren)
 {
     srand(time(NULL));
 
@@ -20,6 +21,27 @@ int init()
     if (IMG_Init(IMG_INIT_PNG) < 0)
     {
         printf("Error initializing SDL_image: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    if (TTF_Init() < 0)
+    {
+        printf("Error initializing SDL_ttf: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    *win = SDL_CreateWindow("Blocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESOLUTION_X, RESOLUTION_Y, SDL_WINDOW_SHOWN);
+    *ren = SDL_CreateRenderer(*win, -1, SDL_RENDERER_ACCELERATED);
+
+    if (!*win)
+    {
+        printf("Window init error: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    if (!*ren)
+    {
+        printf("Renderer init error: %s\n", SDL_GetError());
         return -1;
     }
 

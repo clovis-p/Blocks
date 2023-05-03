@@ -21,13 +21,14 @@ int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented
 
 int main(int argc, char **argv)
 {
-    if (!init())
+    SDL_Window *win = NULL;
+    SDL_Renderer *ren = NULL;
+
+    if (!init(&win, &ren))
     {
         return -1;
     }
 
-    SDL_Window *win = NULL;
-    SDL_Renderer *ren = NULL;
     SDL_Event event;
 
     gameObject player;
@@ -39,21 +40,6 @@ int main(int argc, char **argv)
 
     quit = 0;
     shoot = 0;
-
-    win = SDL_CreateWindow("Blocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESOLUTION_X, RESOLUTION_Y, SDL_WINDOW_SHOWN);
-    ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-
-    if (!win)
-    {
-        printf("Window init error: %s\n", SDL_GetError());
-        return 2;
-    }
-
-    if (!ren)
-    {
-        printf("Renderer init error: %s\n", SDL_GetError());
-        return 3;
-    }
 
     initGame(ren, &player, &enemy, &enemyTexture, &bullet);
 
@@ -150,9 +136,6 @@ int main(int argc, char **argv)
         previousTicks = SDL_GetTicks();
     }
 
-    SDL_DestroyWindow(win);
-    SDL_DestroyRenderer(ren);
-
-    quitF();
+    quitF(&win, &ren);
     return 0;
 }
