@@ -25,6 +25,10 @@ void render(SDL_Renderer *ren, TTF_Font *font, gameObject player, gameObject ene
     {
         renderText(ren, font, "Pause", 0, 0, 255, 255, 255);
     }
+    else if (gameState == 2)
+    {
+        renderText(ren, font, "Game over", 0, 0, 255, 255, 255);
+    }
 
     SDL_RenderPresent(ren);
 }
