@@ -43,8 +43,8 @@ int main(int argc, char **argv)
     gameObject bullet[51];
     int bullet_i = 0;
     int enemy_i = 0;
-    gameObject enemy[30];
-    SDL_Texture *enemyTexture[30];
+    gameObject enemy[75];
+    SDL_Texture *enemyTexture[75];
 
     quit = 0;
     shoot = 0;
