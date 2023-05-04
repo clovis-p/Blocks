@@ -5,6 +5,8 @@
 #include "main.h"
 #include "collision.h"
 
+extern int enemyCount;
+
 int overlap(gameObject o1, gameObject o2)
 {
     int o1top = o1.rect.y;
@@ -86,11 +88,11 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 {
     int enemy_i = 0;
     int colEnemy = 0;
-    while (enemy_i < ENEMY_COUNT)
+    while (enemy_i < enemyCount)
     {
         colEnemy = 0;
         enemy[enemy_i].collision.left = 0;
-        while (colEnemy < ENEMY_COUNT)
+        while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
                 enemy[enemy_i].rect.x >= enemy[colEnemy].rect.x + 0.9 * enemy[colEnemy].rect.w &&
@@ -106,7 +108,7 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
         colEnemy = 0;
         enemy[enemy_i].collision.right = 0;
-        while (colEnemy < ENEMY_COUNT)
+        while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy])&&
                 enemy[enemy_i].rect.x + enemy[enemy_i].rect.w <= enemy[colEnemy].rect.x + 0.1 * enemy[colEnemy].rect.w &&
@@ -123,7 +125,7 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
         colEnemy = 0;
         enemy[enemy_i].collision.up = 0;
-        while (colEnemy < ENEMY_COUNT)
+        while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
                 enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && // Dirty fix for a bug I don't understand
@@ -140,7 +142,7 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
         colEnemy = 0;
         enemy[enemy_i].collision.down = 0;
-        while (colEnemy < ENEMY_COUNT)
+        while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
                 enemy[enemy_i].rect.y + enemy[enemy_i].rect.h <= enemy[colEnemy].rect.y + 0.1 * enemy[colEnemy].rect.h &&

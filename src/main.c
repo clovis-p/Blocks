@@ -18,7 +18,10 @@ int quit;
 int shoot;
 int reset;
 
-int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented yet), 2: Game over state
+int enemyCount;
+
+int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented yet), 2: Level clear state
+               // 3: Game over state
 
 int main(int argc, char **argv)
 {
@@ -34,12 +37,14 @@ int main(int argc, char **argv)
 
     SDL_Event event;
 
+    enemyCount = 1;
+
     gameObject player;
     gameObject bullet[51];
     int bullet_i = 0;
     int enemy_i = 0;
-    gameObject enemy[ENEMY_COUNT];
-    SDL_Texture *enemyTexture[ENEMY_COUNT];
+    gameObject enemy[30];
+    SDL_Texture *enemyTexture[30];
 
     quit = 0;
     shoot = 0;
@@ -47,7 +52,7 @@ int main(int argc, char **argv)
     initGame(ren, &player, &enemy, &enemyTexture, &bullet);
 
     reset = 0;
-    int remainingEnemies = ENEMY_COUNT;
+    int remainingEnemies = enemyCount;
 
     uint32_t previousTicks = 0;
     uint32_t currentTicks = 0;
@@ -65,7 +70,14 @@ int main(int argc, char **argv)
 
         if (reset)
         {
-            gameState = 2;
+            if (!remainingEnemies)
+            {
+                gameState = 2;
+            }
+            else
+            {
+                gameState = 3;
+            }
             resetTimerPreviousTicks = SDL_GetTicks();
             reset = 0;
         }
@@ -99,7 +111,23 @@ int main(int argc, char **argv)
 
             updateBulletsPos(&bullet);
         }
+        else if (gameState == 3)
+        {
+            if (currentTicks - resetTimerPreviousTicks < 3000)
+            {
+                lol = 1;
+            }
+            else if (lol == 1)
+            {
+                bullet_i = 0;
+                enemy_i = 0;
+                initGame(ren, &player, &enemy, &enemyTexture, &bullet);
+                gameState = 0;
+                lol = 0;
+            }
 
+            updateBulletsPos(&bullet);
+        }
         /*  About the "lol" variable: I do not understand why this is needed, but apparently it is, otherwise the 2000ms
          *  delay does not happen. Removing "gameState = 0;" makes the delay work for some reason, but it is necessary
          *  to set it to zero to restart the game. */
@@ -110,7 +138,7 @@ int main(int argc, char **argv)
         {
             enemy_i = 0;
             remainingEnemies = 0;
-            while (enemy_i < ENEMY_COUNT)
+            while (enemy_i < enemyCount)
             {
                 if (enemy[enemy_i].active)
                 {

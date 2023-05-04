@@ -8,6 +8,10 @@
 #include "main.h"
 #include "init.h"
 
+extern int enemyCount;
+
+extern int gameState;
+
 int init(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
 {
     srand(time(NULL));
@@ -59,6 +63,14 @@ int init(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
 
 void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Texture **enemyTexture, gameObject *bullet)
 {
+    if (gameState == 2)
+    {
+        enemyCount++;
+    }
+    else if (gameState == 3)
+    {
+        enemyCount = 1;
+    }
     int enemy_i = 0;
     int bullet_i = 0;
 
@@ -93,7 +105,7 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
         bullet_i++;
     }
 
-    while (enemy_i < ENEMY_COUNT)
+    while (enemy_i < enemyCount)
     {
         enemy[enemy_i].speed = 1;
 
@@ -110,12 +122,12 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
             enemy[enemy_i].fp.x = 0;
         else if (rand() % 2) // randomize enemy start points (flip a coin, top or bottom)
         {
-            enemy[enemy_i].fp.x = RESOLUTION_X_F / ENEMY_COUNT * enemy_i;
+            enemy[enemy_i].fp.x = RESOLUTION_X_F / enemyCount * enemy_i;
             enemy[enemy_i].fp.y = 0;
         }
         else
         {
-            enemy[enemy_i].fp.x = RESOLUTION_X_F / ENEMY_COUNT * enemy_i;
+            enemy[enemy_i].fp.x = RESOLUTION_X_F / enemyCount * enemy_i;
             enemy[enemy_i].fp.y = RESOLUTION_Y_F - enemy[enemy_i].fp.h;
         }
 

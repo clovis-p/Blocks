@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
@@ -9,8 +11,10 @@ static void renderPlayer(SDL_Renderer *ren, gameObject player);
 static void renderBullets(SDL_Renderer* ren, gameObject bullet[]);
 static void renderEnemies(SDL_Renderer *ren, gameObject enemy[], SDL_Texture *texture[]);
 static void renderText(SDL_Renderer *ren, TTF_Font *font, char text[], int x, int y, int r, int g, int b);
+static void renderLevelText(SDL_Renderer *ren, TTF_Font *font, int level);
 
 extern int gameState;
+extern int enemyCount;
 
 void render(SDL_Renderer *ren, TTF_Font *font, gameObject player, gameObject enemy[], SDL_Texture *enemyTexture[], gameObject bullet[])
 {
@@ -21,11 +25,17 @@ void render(SDL_Renderer *ren, TTF_Font *font, gameObject player, gameObject ene
     renderPlayer(ren, player);
     renderEnemies(ren, enemy, enemyTexture);
 
+    renderLevelText(ren, font, enemyCount);
+
     if (gameState == 1)
     {
         renderText(ren, font, "Pause", 0, 0, 255, 255, 255);
     }
     else if (gameState == 2)
+    {
+        renderText(ren, font, "Level Clear", 0, 0, 255, 255, 255);
+    }
+    else if (gameState == 3)
     {
         renderText(ren, font, "Game over", 0, 0, 255, 255, 255);
     }
@@ -60,7 +70,7 @@ static void renderBullets(SDL_Renderer* ren, gameObject bullet[])
 static void renderEnemies(SDL_Renderer *ren, gameObject enemy[], SDL_Texture *texture[])
 {
     int i = 0;
-    while (i < ENEMY_COUNT)
+    while (i < enemyCount)
     {
         if (enemy[i].active)
         {
@@ -116,4 +126,14 @@ static void renderText(SDL_Renderer *ren, TTF_Font *font, char text[], int x, in
 
         SDL_RenderCopy(ren, texture, NULL, &dstRect);
     }
+}
+
+static void renderLevelText(SDL_Renderer *ren, TTF_Font *font, int level)
+{
+    char levelText[10];
+
+    sprintf(levelText, "Level %d", level);
+
+    renderText(ren, font, levelText, 850, 635, 255, 255, 255);
+    // TODO: make text position adapt to different resolutions
 }
