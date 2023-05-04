@@ -8,7 +8,7 @@
 #include "main.h"
 #include "init.h"
 
-int init(SDL_Window **win, SDL_Renderer **ren)
+int init(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
 {
     srand(time(NULL));
 
@@ -31,7 +31,6 @@ int init(SDL_Window **win, SDL_Renderer **ren)
     }
 
     *win = SDL_CreateWindow("Blocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESOLUTION_X, RESOLUTION_Y, SDL_WINDOW_SHOWN);
-    *ren = SDL_CreateRenderer(*win, -1, SDL_RENDERER_ACCELERATED);
 
     if (!*win)
     {
@@ -39,9 +38,19 @@ int init(SDL_Window **win, SDL_Renderer **ren)
         return -1;
     }
 
+    *ren = SDL_CreateRenderer(*win, -1, SDL_RENDERER_ACCELERATED);
+
     if (!*ren)
     {
         printf("Renderer init error: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    *font = TTF_OpenFont("../resources/font/3DIsometric-Bold.ttf", (RESOLUTION_Y / 10));
+
+    if (!*font)
+    {
+        printf("Failed to open font: %s\n", SDL_GetError());
         return -1;
     }
 

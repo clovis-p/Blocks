@@ -4,8 +4,10 @@
 
 #include "quit.h"
 
-void quitF(SDL_Window **win, SDL_Renderer **ren)
+void quitF(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
 {
+    TTF_CloseFont(*font);
+
     SDL_DestroyRenderer(*ren);
     SDL_DestroyWindow(*win);
 

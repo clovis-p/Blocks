@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "main.h"
 #include "init.h"
@@ -24,7 +25,9 @@ int main(int argc, char **argv)
     SDL_Window *win = NULL;
     SDL_Renderer *ren = NULL;
 
-    if (!init(&win, &ren))
+    TTF_Font *font = NULL;
+
+    if (!init(&win, &ren, &font))
     {
         return -1;
     }
@@ -132,7 +135,7 @@ int main(int argc, char **argv)
         }
         bullet_i = 0;
 
-        render(ren, player, enemy, enemyTexture, bullet);
+        render(ren, font, player, enemy, enemyTexture, bullet);
 
         currentTicks = SDL_GetTicks();
 
@@ -142,6 +145,6 @@ int main(int argc, char **argv)
         previousTicks = SDL_GetTicks();
     }
 
-    quitF(&win, &ren);
+    quitF(&win, &ren, &font);
     return 0;
 }

@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "main.h"
 #include "render.h"
@@ -7,8 +8,11 @@ static void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, in
 static void renderPlayer(SDL_Renderer *ren, gameObject player);
 static void renderBullets(SDL_Renderer* ren, gameObject bullet[]);
 static void renderEnemies(SDL_Renderer *ren, gameObject enemy[], SDL_Texture *texture[]);
+static void renderText(SDL_Renderer *ren, TTF_Font *font, char text[], int x, int y, int r, int g, int b);
 
-void render(SDL_Renderer *ren, gameObject player, gameObject enemy[], SDL_Texture *enemyTexture[], gameObject bullet[])
+extern int gameState;
+
+void render(SDL_Renderer *ren, TTF_Font *font, gameObject player, gameObject enemy[], SDL_Texture *enemyTexture[], gameObject bullet[])
 {
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
@@ -16,6 +20,11 @@ void render(SDL_Renderer *ren, gameObject player, gameObject enemy[], SDL_Textur
     renderBullets(ren, bullet);
     renderPlayer(ren, player);
     renderEnemies(ren, enemy, enemyTexture);
+
+    if (gameState == 1)
+    {
+        renderText(ren, font, "Pause", 0, 0, 255, 255, 255);
+    }
 
     SDL_RenderPresent(ren);
 }
@@ -55,5 +64,52 @@ static void renderEnemies(SDL_Renderer *ren, gameObject enemy[], SDL_Texture *te
             SDL_RenderCopy(ren, texture[i], NULL, &enemy[i].rect);
         }
         i++;
+    }
+}
+
+static void renderText(SDL_Renderer *ren, TTF_Font *font, char text[], int x, int y, int r, int g, int b)
+{
+    static char renderedText[15];
+
+    static SDL_Surface* surface;
+    static SDL_Texture* texture;
+
+    static SDL_Rect dstRect;
+
+    if (renderedText == text)
+    {
+        SDL_RenderCopy(ren, texture, NULL, &dstRect);
+    }
+    else
+    {
+        SDL_DestroyTexture(texture);
+        SDL_FreeSurface(surface);
+
+        SDL_Color color = {r, g, b};
+        surface = TTF_RenderText_Solid(font, text, color);
+
+        if (!surface)
+        {
+            printf("Failed to create text surface: %s\n", TTF_GetError());
+        }
+
+        texture = SDL_CreateTextureFromSurface(ren, surface);
+
+        if (!texture) {
+            printf("Failed to create text texture: %s\n", SDL_GetError());
+        }
+
+        // Get the dimensions of the texture
+        int texW = 0;
+        int texH = 0;
+        SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+
+        // Set the destination rectangle for rendering the texture
+        dstRect.x = x;
+        dstRect.y = y;
+        dstRect.w = texW;
+        dstRect.h = texH;
+
+        SDL_RenderCopy(ren, texture, NULL, &dstRect);
     }
 }
