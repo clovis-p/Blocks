@@ -165,9 +165,12 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
         colEnemy = 0;
 
+        printf("Enemy: %f, %f\nPlayer: %f, %f\n\n", enemy[enemy_i].fp.x, enemy[enemy_i].fp.y, player.fp.x, player.fp.y);
+
         if (overlap(enemy[enemy_i], player))
         {
             reset = 1;
+            printf("Reset\n");
         }
 
         enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;

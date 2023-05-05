@@ -82,7 +82,7 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
     player->color.g = 0;
     player->color.b = 255;
 
-    player->active = 720 / RESOLUTION_Y;
+    player->active = 1;
 
     player->speed = 3.0;
 
