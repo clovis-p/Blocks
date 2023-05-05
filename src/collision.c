@@ -9,15 +9,15 @@ extern int enemyCount;
 
 int overlap(gameObject o1, gameObject o2)
 {
-    int o1top = o1.rect.y;
-    int o1left = o1.rect.x;
-    int o1bottom = o1.rect.y + o1.rect.h;
-    int o1right = o1.rect.x + o1.rect.w;
+    float o1top = o1.fp.y;
+    float o1left = o1.fp.x;
+    float o1bottom = o1.fp.y + o1.fp.h;
+    float o1right = o1.fp.x + o1.fp.w;
 
-    int o2top = o2.rect.y;
-    int o2left = o2.rect.x;
-    int o2bottom = o2.rect.y + o2.rect.h;
-    int o2right = o2.rect.x + o2.rect.w;
+    float o2top = o2.fp.y;
+    float o2left = o2.fp.x;
+    float o2bottom = o2.fp.y + o2.fp.h;
+    float o2right = o2.fp.x + o2.fp.w;
 
     if (o1.active &&
         o2.active &&
@@ -36,7 +36,7 @@ int overlap(gameObject o1, gameObject o2)
 
 void checkIfWithinBounds(gameObject *o, int flag)
 {
-    if (o->rect.x <= 0)
+    if (o->fp.x <= 0)
     {
         if (flag == SET_COLLISION)
             o->collision.left = 1;
@@ -48,7 +48,7 @@ void checkIfWithinBounds(gameObject *o, int flag)
         if (flag == SET_COLLISION)
             o->collision.left = 0;
     }
-    if (o->rect.x + o->rect.w >= RESOLUTION_X)
+    if (o->fp.x + o->fp.w >= 1280.0)
     {
         if (flag == SET_COLLISION)
             o->collision.right = 1;
@@ -60,7 +60,7 @@ void checkIfWithinBounds(gameObject *o, int flag)
         if (flag == SET_COLLISION)
             o->collision.right = 0;
     }
-    if (o->rect.y <= 0)
+    if (o->fp.y <= 0)
     {
         o->collision.up = 1;
         if (flag == SET_INACTIVE)
@@ -71,7 +71,7 @@ void checkIfWithinBounds(gameObject *o, int flag)
         if (flag == SET_COLLISION)
             o->collision.up = 0;
     }
-    if (o->rect.y + o->rect.h >= RESOLUTION_Y)
+    if (o->fp.y + o->fp.h >= 720.0)
     {
         o->collision.down = 1;
         if (flag == SET_INACTIVE)
@@ -88,6 +88,9 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 {
     int enemy_i = 0;
     int colEnemy = 0;
+
+    float debugSpeed = 0;
+
     while (enemy_i < enemyCount)
     {
         colEnemy = 0;
@@ -95,23 +98,24 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
         while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
-                enemy[enemy_i].rect.x >= enemy[colEnemy].rect.x + 0.9 * enemy[colEnemy].rect.w &&
+                enemy[enemy_i].fp.x >= enemy[colEnemy].fp.x + 0.9 * enemy[colEnemy].fp.w &&
                 colEnemy != enemy_i)
             {
                 enemy[enemy_i].collision.left = 1;
             }
             colEnemy++;
         }
-        if (enemy[enemy_i].rect.x + enemy[enemy_i].rect.w / 2 > player.rect.x + player.rect.w / 2 && !enemy[enemy_i].collision.left && enemy[enemy_i].active) // move left
-            enemy[enemy_i].rect.x -= enemy[enemy_i].speed + rand() % 2;
-
+        if (enemy[enemy_i].fp.x + enemy[enemy_i].fp.w / 2.0 > player.fp.x + player.fp.w / 2.0 && !enemy[enemy_i].collision.left && enemy[enemy_i].active) // move left
+        {
+            enemy[enemy_i].fp.x -= enemy[enemy_i].speed + rand() % 2;
+        }
 
         colEnemy = 0;
         enemy[enemy_i].collision.right = 0;
         while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy])&&
-                enemy[enemy_i].rect.x + enemy[enemy_i].rect.w <= enemy[colEnemy].rect.x + 0.1 * enemy[colEnemy].rect.w &&
+                enemy[enemy_i].fp.x + enemy[enemy_i].fp.w <= enemy[colEnemy].fp.x + 0.1 * enemy[colEnemy].fp.w &&
                 colEnemy != enemy_i)
             {
                 enemy[enemy_i].collision.right = 1;
@@ -119,17 +123,18 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
             colEnemy++;
         }
-        if (enemy[enemy_i].rect.x + enemy[enemy_i].rect.w / 2 < player.rect.x + player.rect.w / 2 && !enemy[enemy_i].collision.right && enemy[enemy_i].active) // move right
-            enemy[enemy_i].rect.x += enemy[enemy_i].speed + rand() % 2;
-
+        if (enemy[enemy_i].fp.x + enemy[enemy_i].fp.w / 2.0 < player.fp.x + player.fp.w / 2.0 && !enemy[enemy_i].collision.right && enemy[enemy_i].active) // move right
+        {
+            enemy[enemy_i].fp.x += enemy[enemy_i].speed + rand() % 2;
+        }
 
         colEnemy = 0;
         enemy[enemy_i].collision.up = 0;
         while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
-                enemy[enemy_i].rect.y - (enemy[colEnemy].rect.y + enemy[colEnemy].rect.h) < enemy[enemy_i].speed && // Dirty fix for a bug I don't understand
-                enemy[enemy_i].rect.y >= enemy[colEnemy].rect.y + 0.9 * enemy[colEnemy].rect.h &&
+                enemy[enemy_i].fp.y - (enemy[colEnemy].fp.y + enemy[colEnemy].fp.h) < enemy[enemy_i].speed && // Dirty fix for a bug I don't understand
+                enemy[enemy_i].fp.y >= enemy[colEnemy].fp.y + 0.9 * enemy[colEnemy].fp.h &&
                 colEnemy != enemy_i)
             {
                 enemy[enemy_i].collision.up = 1;
@@ -137,15 +142,17 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
             colEnemy++;
         }
-        if (enemy[enemy_i].rect.y + enemy[enemy_i].rect.h / 2 > player.rect.y + player.rect.h / 2 && !enemy[enemy_i].collision.up && enemy[enemy_i].active) // move up
-            enemy[enemy_i].rect.y -= enemy[enemy_i].speed + rand() % 2; // + 0 ou + 1
+        if (enemy[enemy_i].fp.y + enemy[enemy_i].fp.h / 2.0 > player.fp.y + player.fp.h / 2.0 && !enemy[enemy_i].collision.up && enemy[enemy_i].active) // move up
+        {
+            enemy[enemy_i].fp.y -= enemy[enemy_i].speed + rand() % 2;
+        }
 
         colEnemy = 0;
         enemy[enemy_i].collision.down = 0;
         while (colEnemy < enemyCount)
         {
             if (overlap(enemy[enemy_i], enemy[colEnemy]) &&
-                enemy[enemy_i].rect.y + enemy[enemy_i].rect.h <= enemy[colEnemy].rect.y + 0.1 * enemy[colEnemy].rect.h &&
+                enemy[enemy_i].fp.y + enemy[enemy_i].fp.h <= enemy[colEnemy].fp.y + 0.1 * enemy[colEnemy].fp.h &&
                 colEnemy != enemy_i)
             {
                 enemy[enemy_i].collision.down = 1;
@@ -153,8 +160,10 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
             colEnemy++;
         }
-        if (enemy[enemy_i].rect.y + enemy[enemy_i].rect.h / 2 < player.rect.y + player.rect.h / 2 && !enemy[enemy_i].collision.down && enemy[enemy_i].active) // move down
-            enemy[enemy_i].rect.y += enemy[enemy_i].speed + rand() % 2;
+        if (enemy[enemy_i].fp.y + enemy[enemy_i].fp.h / 2.0 < player.fp.y + player.fp.h / 2.0 && !enemy[enemy_i].collision.down && enemy[enemy_i].active) // move down
+        {
+            enemy[enemy_i].fp.y += enemy[enemy_i].speed + rand() % 2;
+        }
 
         colEnemy = 0;
 
@@ -162,6 +171,11 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
         {
             reset = 1;
         }
+
+        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;
+        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;
+        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * RESOLUTION_Y_F;
+        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * RESOLUTION_Y_F;
 
         enemy_i++;
     }

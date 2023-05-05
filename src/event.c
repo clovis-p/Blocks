@@ -20,19 +20,24 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
         quit = 1;
     }
 
+    if (keyStates[SDL_SCANCODE_LALT] && keyStates[SDL_SCANCODE_F4])
+    {
+        quit = 1;
+    }
+
     if (gameState == 0) {
         if (keyStates[SDL_SCANCODE_LSHIFT])
-            player->speed = 6;
+            player->speed = 3.0 * 2.0;
         else
-            player->speed = 3;
+            player->speed = 3.0;
 
         if (keyStates[SDL_SCANCODE_W] && !player->collision.up) // up
         {
-            player->rect.y -= player->speed;
+            player->fp.y -= player->speed;
             player->direction = 3; // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
         }
         if (keyStates[SDL_SCANCODE_A] && !player->collision.left) {
-            player->rect.x -= player->speed;
+            player->fp.x -= player->speed;
             player->direction = 1;
         }
         if (keyStates[SDL_SCANCODE_W] && keyStates[SDL_SCANCODE_A]) // up/left
@@ -40,7 +45,7 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
             player->direction = 2;
         }
         if (keyStates[SDL_SCANCODE_S] && !player->collision.down) {
-            player->rect.y += player->speed;
+            player->fp.y += player->speed;
             player->direction = 7;
         }
         if (keyStates[SDL_SCANCODE_A] && keyStates[SDL_SCANCODE_S]) // left/down
@@ -48,7 +53,7 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
             player->direction = 8;
         }
         if (keyStates[SDL_SCANCODE_D] && !player->collision.right) {
-            player->rect.x += player->speed;
+            player->fp.x += player->speed;
             player->direction = 5;
         }
         if (keyStates[SDL_SCANCODE_S] && keyStates[SDL_SCANCODE_D]) // down/right
@@ -67,6 +72,11 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
         if (!keyStates[SDL_SCANCODE_SPACE]) {
             lockShooting = 0;
         }
+
+        player->rect.x = player->fp.x / 1280 * RESOLUTION_X_F;
+        player->rect.y = player->fp.y / 720 * RESOLUTION_Y_F;
+        player->rect.w = player->fp.w / 1280 * RESOLUTION_X_F;
+        player->rect.h = player->fp.h / 720 * RESOLUTION_Y_F;
     }
     if (gameState == 0 || gameState == 1)
     {

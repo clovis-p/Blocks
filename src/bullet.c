@@ -11,8 +11,8 @@ void shootBullet(gameObject *bullet, gameObject *shooter)
 
     bullet[i].direction = shooter->direction;
     bullet[i].active = 1;
-    bullet[i].rect.x = shooter->rect.x + shooter->rect.w / 2 - bullet[i].rect.w / 2;
-    bullet[i].rect.y = shooter->rect.y + shooter->rect.h / 2 - bullet[i].rect.h / 2;
+    bullet[i].fp.x = shooter->fp.x + shooter->fp.w / 2 - bullet[i].fp.w / 2;
+    bullet[i].fp.y = shooter->fp.y + shooter->fp.h / 2 - bullet[i].fp.h / 2;
 
     if (i < 49)
         i++;
@@ -29,40 +29,45 @@ void updateBulletsPos(gameObject *bullet)
         {   // 0 = undefined, 1 = left, 2 = left/up, 3 = up, 4 = up/right, 5 = right, 6 = right/down, 7 = down, 8 = down/left
             if (bullet[i].direction == 1 || bullet[i].direction == 0)
             {
-                bullet[i].rect.x -= bullet[i].speed;
+                bullet[i].fp.x -= bullet[i].speed;
             }
             if (bullet[i].direction == 2)
             {
-                bullet[i].rect.x -= bullet[i].speed;
-                bullet[i].rect.y -= bullet[i].speed;
+                bullet[i].fp.x -= bullet[i].speed;
+                bullet[i].fp.y -= bullet[i].speed;
             }
             if (bullet[i].direction == 3)
             {
-                bullet[i].rect.y -= bullet[i].speed;
+                bullet[i].fp.y -= bullet[i].speed;
             }
             if (bullet[i].direction == 4)
             {
-                bullet[i].rect.y -= bullet[i].speed;
-                bullet[i].rect.x += bullet[i].speed;
+                bullet[i].fp.y -= bullet[i].speed;
+                bullet[i].fp.x += bullet[i].speed;
             }
             if (bullet[i].direction == 5)
             {
-                bullet[i].rect.x += bullet[i].speed;
+                bullet[i].fp.x += bullet[i].speed;
             }
             if (bullet[i].direction == 6)
             {
-                bullet[i].rect.x += bullet[i].speed;
-                bullet[i].rect.y += bullet[i].speed;
+                bullet[i].fp.x += bullet[i].speed;
+                bullet[i].fp.y += bullet[i].speed;
             }
             if (bullet[i].direction == 7)
             {
-                bullet[i].rect.y += bullet[i].speed;
+                bullet[i].fp.y += bullet[i].speed;
             }
             if (bullet[i].direction == 8)
             {
-                bullet[i].rect.y += bullet[i].speed;
-                bullet[i].rect.x -= bullet[i].speed;
+                bullet[i].fp.y += bullet[i].speed;
+                bullet[i].fp.x -= bullet[i].speed;
             }
+
+            bullet[i].rect.x = bullet[i].fp.x / 1280 * RESOLUTION_X_F;
+            bullet[i].rect.y = bullet[i].fp.y / 720 * RESOLUTION_Y_F;
+            bullet[i].rect.w = bullet[i].fp.w / 1280 * RESOLUTION_X_F;
+            bullet[i].rect.h = bullet[i].fp.h / 720 * RESOLUTION_Y_F;
         }
         i++;
     }

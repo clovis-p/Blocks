@@ -82,57 +82,62 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
     player->color.g = 0;
     player->color.b = 255;
 
-    player->active = 1;
+    player->active = 720 / RESOLUTION_Y;
 
-    player->speed = 3;
+    player->speed = 3.0;
 
-    player->fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
-    player->fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
-    player->rect.w = player->fp.w;
-    player->rect.h = player->fp.h;
-    player->rect.x = RESOLUTION_X / 2 - player->rect.w / 2;
-    player->rect.y = RESOLUTION_Y / 2 - player->rect.h / 2;
+    player->fp.w = 40.0;
+    player->fp.h = 40.0;
+    player->rect.w = player->fp.w / 1280 * RESOLUTION_X_F;
+    player->rect.h = player->fp.h / 720 * RESOLUTION_Y_F;
+    player->fp.x = 1280 / 2 - player->fp.w / 2;
+    player->fp.y = 720 / 2 - player->fp.h / 2;
+    player->rect.x = player->fp.x;
+    player->rect.y = player->fp.y;
+
 
     while (bullet_i < 50)
     {
         bullet[bullet_i].rect.x = 0;
         bullet[bullet_i].rect.y = 0;
-        bullet[bullet_i].rect.w = 8.0 / 1280.0 * RESOLUTION_X_F;
-        bullet[bullet_i].rect.h = 8.0 / 720.0 * RESOLUTION_Y_F;
+        bullet[bullet_i].fp.w = 8.0;
+        bullet[bullet_i].fp.h = 8.0;
+        bullet[bullet_i].rect.w = bullet[bullet_i].fp.w / 1280.0 * RESOLUTION_X_F;
+        bullet[bullet_i].rect.h = bullet[bullet_i].fp.w / 720.0 * RESOLUTION_Y_F;
         bullet[bullet_i].active = 0;
         bullet[bullet_i].direction = 0;
-        bullet[bullet_i].speed = 8.0 / 1280.0 * RESOLUTION_X_F;
+        bullet[bullet_i].speed = 8.0;
         bullet_i++;
     }
 
     while (enemy_i < enemyCount)
     {
-        enemy[enemy_i].speed = 1;
+        enemy[enemy_i].speed = 1.0;
 
         enemy[enemy_i].color.r = rand() % (256 - min_brightness) + min_brightness; // random number, min: min_brightness, max 255
         enemy[enemy_i].color.g = rand() % (256 - min_brightness) + min_brightness;
         enemy[enemy_i].color.b = rand() % (256 - min_brightness) + min_brightness;
 
-        enemy[enemy_i].fp.w = 40.0 / 1280.0 * RESOLUTION_X_F;
-        enemy[enemy_i].fp.h = 40.0 / 720.0 * RESOLUTION_Y_F;
-        enemy[enemy_i].rect.w = enemy[enemy_i].fp.w;
-        enemy[enemy_i].rect.h = enemy[enemy_i].fp.h;
+        enemy[enemy_i].fp.w = 40.0;
+        enemy[enemy_i].fp.h = 40.0;
+        enemy[enemy_i].rect.w = enemy[enemy_i].fp.w / 1280 * RESOLUTION_X_F;
+        enemy[enemy_i].rect.h = enemy[enemy_i].fp.h / 720 * RESOLUTION_Y_F;
 
         if (enemy_i == 0)
             enemy[enemy_i].fp.x = 0;
         else if (rand() % 2) // randomize enemy start points (flip a coin, top or bottom)
         {
-            enemy[enemy_i].fp.x = RESOLUTION_X_F / enemyCount * enemy_i;
+            enemy[enemy_i].fp.x = 1280 / enemyCount * enemy_i;
             enemy[enemy_i].fp.y = 0;
         }
         else
         {
-            enemy[enemy_i].fp.x = RESOLUTION_X_F / enemyCount * enemy_i;
-            enemy[enemy_i].fp.y = RESOLUTION_Y_F - enemy[enemy_i].fp.h;
+            enemy[enemy_i].fp.x = 1280 / enemyCount * enemy_i;
+            enemy[enemy_i].fp.y = 720 - enemy[enemy_i].fp.h;
         }
 
-        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x;
-        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y;
+        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;
+        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * RESOLUTION_Y_F;
         enemy[enemy_i].active = 1;
 
         sprintf(file, "../resources/enemy/%d.png", ((rand() % 9) + 1));

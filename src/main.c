@@ -146,9 +146,11 @@ int main(int argc, char **argv)
 
                     if (bullet[bullet_i].active && overlap(bullet[bullet_i], enemy[enemy_i]))
                     {
-                        enemy[enemy_i].rect.w -= 1;
-                        enemy[enemy_i].rect.h -= 1;
-                        if (enemy[enemy_i].rect.w < 10)
+                        enemy[enemy_i].fp.w -= 1.0;
+                        enemy[enemy_i].fp.h -= 1.0;
+                        enemy[enemy_i].rect.w = enemy[enemy_i].fp.w / 1280 * RESOLUTION_X_F;
+                        enemy[enemy_i].rect.h = enemy[enemy_i].fp.h / 720 * RESOLUTION_Y_F;
+                        if (enemy[enemy_i].fp.w < 10)
                         {
                             enemy[enemy_i].active = 0;
                         }

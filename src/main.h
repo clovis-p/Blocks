@@ -23,12 +23,12 @@ typedef struct collision
 
 typedef struct gameObject
 {
-    SDL_Rect rect;
-    fpRect fp;
+    SDL_Rect rect; // Position and size for rendering only
+    fpRect fp; // Position and size for everything else
     SDL_Color color;
     int direction;
     int active;
-    int speed;
+    float speed;
     collision collision;
 } gameObject;
 

@@ -131,9 +131,14 @@ static void renderText(SDL_Renderer *ren, TTF_Font *font, char text[], int x, in
 static void renderLevelText(SDL_Renderer *ren, TTF_Font *font, int level)
 {
     char levelText[10];
+    int textX;
+    int textY;
 
     sprintf(levelText, "Level %d", level);
 
-    renderText(ren, font, levelText, 850, 635, 255, 255, 255);
+    textX = 850.0 / 1280.0 * RESOLUTION_X_F;
+    textY = 635.0 / 720.0 * RESOLUTION_Y_F;
+
+    renderText(ren, font, levelText, textX, textY, 255, 255, 255);
     // TODO: make text position adapt to different resolutions
 }
