@@ -89,8 +89,6 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
     int enemy_i = 0;
     int colEnemy = 0;
 
-    float debugSpeed = 0;
-
     while (enemy_i < enemyCount)
     {
         colEnemy = 0;
