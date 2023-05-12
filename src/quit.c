@@ -14,5 +14,4 @@ void quitF(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
-
 }

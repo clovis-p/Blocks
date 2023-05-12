@@ -7,6 +7,8 @@
 
 extern int enemyCount;
 
+extern size window_res;
+
 int overlap(gameObject o1, gameObject o2)
 {
     float o1top = o1.fp.y;
@@ -165,18 +167,15 @@ void checkEnemyCollisions(gameObject *enemy, gameObject player)
 
         colEnemy = 0;
 
-        printf("Enemy: %f, %f\nPlayer: %f, %f\n\n", enemy[enemy_i].fp.x, enemy[enemy_i].fp.y, player.fp.x, player.fp.y);
-
         if (overlap(enemy[enemy_i], player))
         {
             reset = 1;
-            printf("Reset\n");
         }
 
-        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;
-        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;
-        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * RESOLUTION_Y_F;
-        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * RESOLUTION_Y_F;
+        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * window_res.fw;
+        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * window_res.fw;
+        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * window_res.fh;
+        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * window_res.fh;
 
         enemy_i++;
     }

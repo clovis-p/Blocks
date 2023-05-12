@@ -23,6 +23,8 @@ int enemyCount;
 int gameState; // 0: Normal in-game state, 1: Paused game state (not implemented yet), 2: Level clear state
                // 3: Game over state
 
+size window_res;
+
 int main(int argc, char **argv)
 {
     SDL_Window *win = NULL;
@@ -30,10 +32,47 @@ int main(int argc, char **argv)
 
     TTF_Font *font = NULL;
 
-    if (!init(&win, &ren, &font))
+    if (!init(&win, SDL_WINDOW_SHOWN, &ren, &font))
     {
         return -1;
     }
+
+    /* The following section is only for debugging
+     *
+     *  I'm having trouble getting SDL to give me the resolution of a single monitor in a multi-monitor linux setup.
+     *  SDL_GetNumVideoDisplays returns 1, although I have 2 monitors. Getting the resolution with SDL_GetDisplayMode
+     *  gives the resolution of all displays combined, which isn't what we want.
+     */
+
+    static int display_in_use = 0; // Only using first display
+
+    int i, display_mode_count;
+    SDL_DisplayMode mode;
+    Uint32 f;
+
+    SDL_Log("SDL_GetNumVideoDisplays(): %i", SDL_GetNumVideoDisplays());
+
+    display_mode_count = SDL_GetNumDisplayModes(display_in_use);
+    if (display_mode_count < 1) {
+        SDL_Log("SDL_GetNumDisplayModes failed: %s", SDL_GetError());
+        return 1;
+    }
+    SDL_Log("SDL_GetNumDisplayModes: %i", display_mode_count);
+
+    for (i = 0; i < display_mode_count; ++i) {
+        if (SDL_GetDisplayMode(display_in_use, i, &mode) != 0) {
+            SDL_Log("SDL_GetDisplayMode failed: %s", SDL_GetError());
+            return 1;
+        }
+        f = mode.format;
+
+        SDL_Log("Mode %i\tbpp %i\t%s\t%i x %i",
+                i, SDL_BITSPERPIXEL(f),
+                SDL_GetPixelFormatName(f),
+                mode.w, mode.h);
+    }
+
+    // end
 
     SDL_Event event;
 
@@ -148,8 +187,8 @@ int main(int argc, char **argv)
                     {
                         enemy[enemy_i].fp.w -= 1.0;
                         enemy[enemy_i].fp.h -= 1.0;
-                        enemy[enemy_i].rect.w = enemy[enemy_i].fp.w / 1280 * RESOLUTION_X_F;
-                        enemy[enemy_i].rect.h = enemy[enemy_i].fp.h / 720 * RESOLUTION_Y_F;
+                        enemy[enemy_i].rect.w = enemy[enemy_i].fp.w / 1280 * window_res.fw;
+                        enemy[enemy_i].rect.h = enemy[enemy_i].fp.h / 720 * window_res.fh;
                         if (enemy[enemy_i].fp.w < 10)
                         {
                             enemy[enemy_i].active = 0;
@@ -165,7 +204,7 @@ int main(int argc, char **argv)
         }
         bullet_i = 0;
 
-        render(ren, font, player, enemy, enemyTexture, bullet);
+        render(win, ren, &font, player, enemy, enemyTexture, bullet);
 
         currentTicks = SDL_GetTicks();
 

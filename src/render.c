@@ -5,6 +5,9 @@
 
 #include "main.h"
 #include "render.h"
+#include "init.h"
+#include "quit.h"
+#include "event.h"
 
 static void renderObjectAsRect(SDL_Renderer *ren, gameObject o, int r, int g, int b);
 static void renderPlayer(SDL_Renderer *ren, gameObject player);
@@ -16,8 +19,45 @@ static void renderLevelText(SDL_Renderer *ren, TTF_Font *font, int level);
 extern int gameState;
 extern int enemyCount;
 
-void render(SDL_Renderer *ren, TTF_Font *font, gameObject player, gameObject enemy[], SDL_Texture *enemyTexture[], gameObject bullet[])
+extern size window_res;
+
+SDL_Rect display_rect;
+
+void render(SDL_Window *win, SDL_Renderer *ren, TTF_Font **font, gameObject player, gameObject enemy[], SDL_Texture *enemyTexture[], gameObject bullet[])
 {
+    static int fullscreen = -1; // -1: windowed, 1 = fullscreen
+
+    if (fullscreenToggleRequested())
+    {
+        fullscreen = -fullscreen;
+
+        if (fullscreen == 1)
+        {
+            if (SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(win), &display_rect) != 0) {
+                printf("Failed to get desktop display mode.\n");
+                fullscreen = -1;
+            } else {
+                window_res.w = display_rect.w;
+                window_res.h = display_rect.h;
+                window_res.fw = (float) window_res.w;
+                window_res.fh = (float) window_res.h;
+                SDL_SetWindowFullscreen(win, SDL_WINDOW_FULLSCREEN);
+            }
+        }
+        else if (fullscreen == -1)
+        {
+            window_res.w = 1280;
+            window_res.h = 720;
+            window_res.fw = (float)window_res.w;
+            window_res.fh = (float)window_res.h;
+            SDL_SetWindowFullscreen(win, 0);
+        }
+
+        applyNewResolution(win, ren, &*font, &player, enemy, bullet);
+
+        printf("Fullscreen toggled\nnew res: %d, %d\n\n", window_res.w, window_res.h);
+    }
+
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
 
@@ -25,19 +65,19 @@ void render(SDL_Renderer *ren, TTF_Font *font, gameObject player, gameObject ene
     renderPlayer(ren, player);
     renderEnemies(ren, enemy, enemyTexture);
 
-    renderLevelText(ren, font, enemyCount);
+    renderLevelText(ren, *font, enemyCount);
 
     if (gameState == 1)
     {
-        renderText(ren, font, "Pause", 0, 0, 255, 255, 255);
+        renderText(ren, *font, "Pause", 0, 0, 255, 255, 255);
     }
     else if (gameState == 2)
     {
-        renderText(ren, font, "Level Clear", 0, 0, 255, 255, 255);
+        renderText(ren, *font, "Level Clear", 0, 0, 255, 255, 255);
     }
     else if (gameState == 3)
     {
-        renderText(ren, font, "Game over", 0, 0, 255, 255, 255);
+        renderText(ren, *font, "Game over", 0, 0, 255, 255, 255);
     }
 
     SDL_RenderPresent(ren);
@@ -136,9 +176,8 @@ static void renderLevelText(SDL_Renderer *ren, TTF_Font *font, int level)
 
     sprintf(levelText, "Level %d", level);
 
-    textX = 850.0 / 1280.0 * RESOLUTION_X_F;
-    textY = 635.0 / 720.0 * RESOLUTION_Y_F;
+    textX = 850.0 / 1280.0 * window_res.fw;
+    textY = 635.0 / 720.0 * window_res.fh;
 
     renderText(ren, font, levelText, textX, textY, 255, 255, 255);
-    // TODO: make text position adapt to different resolutions
 }

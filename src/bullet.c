@@ -5,6 +5,8 @@
 #include "main.h"
 #include "bullet.h"
 
+extern size window_res;
+
 void shootBullet(gameObject *bullet, gameObject *shooter)
 {
     static int i = 0;
@@ -64,10 +66,10 @@ void updateBulletsPos(gameObject *bullet)
                 bullet[i].fp.x -= bullet[i].speed;
             }
 
-            bullet[i].rect.x = bullet[i].fp.x / 1280 * RESOLUTION_X_F;
-            bullet[i].rect.y = bullet[i].fp.y / 720 * RESOLUTION_Y_F;
-            bullet[i].rect.w = bullet[i].fp.w / 1280 * RESOLUTION_X_F;
-            bullet[i].rect.h = bullet[i].fp.h / 720 * RESOLUTION_Y_F;
+            bullet[i].rect.x = bullet[i].fp.x / 1280 * window_res.fw;
+            bullet[i].rect.y = bullet[i].fp.y / 720 * window_res.fh;
+            bullet[i].rect.w = bullet[i].fp.w / 1280 * window_res.fw;
+            bullet[i].rect.h = bullet[i].fp.h / 720 * window_res.fh;
         }
         i++;
     }

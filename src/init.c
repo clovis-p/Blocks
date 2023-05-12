@@ -12,7 +12,9 @@ extern int enemyCount;
 
 extern int gameState;
 
-int init(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
+extern size window_res;
+
+int init(SDL_Window **win, Uint32 flags, SDL_Renderer **ren, TTF_Font **font)
 {
     srand(time(NULL));
 
@@ -34,7 +36,21 @@ int init(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
         return -1;
     }
 
-    *win = SDL_CreateWindow("Blocks", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESOLUTION_X, RESOLUTION_Y, SDL_WINDOW_SHOWN);
+    if (flags == SDL_WINDOW_FULLSCREEN)
+    {
+        window_res.w = 2560;
+        window_res.h = 1440;
+    }
+    else
+    {
+        window_res.w = 1280;
+        window_res.h = 720;
+    }
+
+    window_res.fw = (float)window_res.w;
+    window_res.fh = (float)window_res.h;
+
+    *win = SDL_CreateWindow("Blocks",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_res.w, window_res.h, flags);
 
     if (!*win)
     {
@@ -50,13 +66,16 @@ int init(SDL_Window **win, SDL_Renderer **ren, TTF_Font **font)
         return -1;
     }
 
-    *font = TTF_OpenFont("../resources/font/3DIsometric-Bold.ttf", (RESOLUTION_Y / 10));
+    *font = TTF_OpenFont("../resources/font/3DIsometric-Bold.ttf", (window_res.h / 10));
 
     if (!*font)
     {
         printf("Failed to open font: %s\n", SDL_GetError());
         return -1;
     }
+
+    SDL_ShowCursor(0);
+
 
     return 1;
 }
@@ -88,8 +107,8 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
 
     player->fp.w = 40.0;
     player->fp.h = 40.0;
-    player->rect.w = player->fp.w / 1280 * RESOLUTION_X_F;
-    player->rect.h = player->fp.h / 720 * RESOLUTION_Y_F;
+    player->rect.w = player->fp.w / 1280 * window_res.fw;
+    player->rect.h = player->fp.h / 720 * window_res.fh;
     player->fp.x = 1280 / 2 - player->fp.w / 2;
     player->fp.y = 720 / 2 - player->fp.h / 2;
     player->rect.x = player->fp.x;
@@ -102,8 +121,8 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
         bullet[bullet_i].rect.y = 0;
         bullet[bullet_i].fp.w = 8.0;
         bullet[bullet_i].fp.h = 8.0;
-        bullet[bullet_i].rect.w = bullet[bullet_i].fp.w / 1280.0 * RESOLUTION_X_F;
-        bullet[bullet_i].rect.h = bullet[bullet_i].fp.w / 720.0 * RESOLUTION_Y_F;
+        bullet[bullet_i].rect.w = bullet[bullet_i].fp.w / 1280.0 * window_res.fw;
+        bullet[bullet_i].rect.h = bullet[bullet_i].fp.w / 720.0 * window_res.fh;
         bullet[bullet_i].active = 0;
         bullet[bullet_i].direction = 0;
         bullet[bullet_i].speed = 8.0;
@@ -120,8 +139,7 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
 
         enemy[enemy_i].fp.w = 40.0;
         enemy[enemy_i].fp.h = 40.0;
-        enemy[enemy_i].rect.w = enemy[enemy_i].fp.w / 1280 * RESOLUTION_X_F;
-        enemy[enemy_i].rect.h = enemy[enemy_i].fp.h / 720 * RESOLUTION_Y_F;
+        scaleObjectToWindowRes(&enemy[enemy_i].rect, &enemy[enemy_i].fp);
 
         if (enemy_i == 0)
             enemy[enemy_i].fp.x = 0;
@@ -136,8 +154,6 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
             enemy[enemy_i].fp.y = 720 - enemy[enemy_i].fp.h;
         }
 
-        enemy[enemy_i].rect.x = enemy[enemy_i].fp.x / 1280 * RESOLUTION_X_F;
-        enemy[enemy_i].rect.y = enemy[enemy_i].fp.y / 720 * RESOLUTION_Y_F;
         enemy[enemy_i].active = 1;
 
         sprintf(file, "../resources/enemy/%d.png", ((rand() % 9) + 1));
@@ -145,6 +161,43 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
 
         enemy_i++;
     }
+}
+
+void applyNewResolution(SDL_Window *win, SDL_Renderer *ren, TTF_Font **font, gameObject *player, gameObject *enemy, gameObject *bullet)
+{
+    int bullet_i = 0;
+    int enemy_i = 0;
+
+    TTF_CloseFont(*font);
+
+    *font = TTF_OpenFont("../resources/font/3DIsometric-Bold.ttf", (window_res.h / 10));
+
+    if (!*font)
+    {
+        printf("Failed to open font: %s\n", SDL_GetError());
+    }
+
+    scaleObjectToWindowRes(&player->rect, &player->fp);
+
+    while (bullet_i < 50)
+    {
+        scaleObjectToWindowRes(&bullet[bullet_i].rect, &bullet[bullet_i].fp);
+        bullet_i++;
+    }
+
+    while (enemy_i < enemyCount)
+    {
+        scaleObjectToWindowRes(&enemy[enemy_i].rect, &enemy[enemy_i].fp);
+        enemy_i++;
+    }
+}
+
+void scaleObjectToWindowRes(SDL_Rect *rect, fpRect *fp)
+{
+    rect->x = fp->x / 1280 * window_res.fw;
+    rect->y = fp->y / 720 * window_res.fh;
+    rect->w = fp->w / 1280 * window_res.fw;
+    rect->h = fp->h / 720 * window_res.fh;
 }
 
 SDL_Texture *loadImageAsTexture(SDL_Renderer *ren, char file[])

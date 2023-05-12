@@ -1,11 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define RESOLUTION_X 1280
-#define RESOLUTION_Y 720
-
-#define RESOLUTION_X_F 1280.0
-#define RESOLUTION_Y_F 720.0
+typedef struct size
+{
+    int w, h;
+    float fw, fh;
+} size;
 
 typedef struct fpRect
 {

@@ -6,14 +6,26 @@
 #include "event.h"
 #include "bullet.h"
 
+extern int gameState;
+
+extern size window_res;
+
+static int f11_pressed;
+
 void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
 {
     const Uint8 *keyStates = SDL_GetKeyboardState(NULL);
 
-    static int lockShooting = 0;  // These make stuff happen only once
-    static int lockPause = 0;     // until it's associated key is released
+    static int lockShooting = 0;    // These make stuff happen only once
+    static int lockPause = 0;       // until it's associated key is released
+    static int lockFullscreen = 0;  //
 
     SDL_PollEvent(&event);
+
+    player->rect.x = player->fp.x / 1280 * window_res.fw;
+    player->rect.y = player->fp.y / 720 * window_res.fh;
+    player->rect.w = player->fp.w / 1280 * window_res.fw;
+    player->rect.h = player->fp.h / 720 * window_res.fh;
 
     if (event.type == SDL_QUIT)
     {
@@ -23,6 +35,14 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
     if (keyStates[SDL_SCANCODE_LALT] && keyStates[SDL_SCANCODE_F4])
     {
         quit = 1;
+    }
+
+    if (keyStates[SDL_SCANCODE_F11] && !lockFullscreen) {
+        f11_pressed = 1;
+        lockFullscreen = 1;
+    }
+    if (!keyStates[SDL_SCANCODE_F11]) {
+        lockFullscreen = 0;
     }
 
     if (gameState == 0) {
@@ -72,11 +92,6 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
         if (!keyStates[SDL_SCANCODE_SPACE]) {
             lockShooting = 0;
         }
-
-        player->rect.x = player->fp.x / 1280 * RESOLUTION_X_F;
-        player->rect.y = player->fp.y / 720 * RESOLUTION_Y_F;
-        player->rect.w = player->fp.w / 1280 * RESOLUTION_X_F;
-        player->rect.h = player->fp.h / 720 * RESOLUTION_Y_F;
     }
     if (gameState == 0 || gameState == 1)
     {
@@ -93,4 +108,15 @@ void handleEvents(gameObject *player, gameObject *bullet, SDL_Event event)
             lockPause = 0;
         }
     }
+}
+
+int fullscreenToggleRequested()
+{
+    if (f11_pressed)
+    {
+        f11_pressed = 0;
+        return 1;
+    }
+    else
+        return 0;
 }
