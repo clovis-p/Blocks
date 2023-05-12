@@ -156,7 +156,7 @@ void initGame(SDL_Renderer *ren, gameObject *player, gameObject *enemy, SDL_Text
 
         enemy[enemy_i].active = 1;
 
-        sprintf(file, "../resources/enemy/%d.png", ((rand() % 9) + 1));
+        sprintf(file, "../resources/enemy/%d.png", ((rand() % 11) + 1));
         enemyTexture[enemy_i] = loadImageAsTexture(ren, file);
 
         enemy_i++;
