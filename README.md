@@ -5,6 +5,7 @@ Rudimentary 2D shooting game written in C with the SDL library
 - Move with WASD
 - Hold shift to move faster
 - Press space to shoot
+- Press F11 to toggle fullscreen mode
 
 ## Screenshots
 <img src="https://raw.githubusercontent.com/clovis-p/blocks/main/screenshots/screenshot2.png" title="Screenshot">
