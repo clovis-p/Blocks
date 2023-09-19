@@ -1,5 +1,6 @@
 # Blocks
 Rudimentary 2D shooting game written in C with the SDL library
+<a href="http://clovis.lol/projets/blocks-emscripten/jouer">Play in browser</a>
 
 ## Controls
 - Move with WASD
